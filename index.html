@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบจัดการทรัพยากรบุคคล (HRIS)</title>
+<script>
+window.onerror=function(m,src,l,c){var d=document.getElementById('jserr');if(!d){d=document.createElement('div');d.id='jserr';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#FE696E;color:#fff;padding:10px 14px;border-radius:12px;font:13px/1.4 monospace;white-space:pre-wrap';(document.body||document.documentElement).appendChild(d)}var x='';try{var ss=document.getElementsByTagName('script'),L=ss[ss.length-1].text.split('\n');if(/Syntax/.test(m))for(var k=Math.max(0,l-5);k<=l;k++)if(L[k]&&L[k].length>=c)x+=' >> '+L[k].substr(Math.max(0,c-30),70)}catch(e){}d.textContent+='JS Error: '+m+' (line '+l+':'+c+')'+x+'\n'};
+document.addEventListener('submit',function(e){e.preventDefault()},true);
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href="#"]');if(a)e.preventDefault()},true);
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#2A3C76;--pc:#DDE3F2;--ov:#5B6485;--c:#FE696E;--g:linear-gradient(135deg,#2A3C76,#4A62A8)}
+body{font-family:Sarabun,sans-serif;color:#1A1C1E;background:linear-gradient(160deg,#F1F2F6 0%,#fff 55%,#E4E8F3 100%) fixed}
+.card{color:#1A1C1E;background:#fff;border:1px solid #ECEEF4;border-radius:1.25rem;box-shadow:0 8px 24px rgba(42,60,118,.08)}
+.inp{width:100%;box-sizing:border-box;background:#F1F2F6;border:1px solid transparent;border-radius:.9rem;padding:.65rem 1rem;font-size:.9rem;outline:none;transition:.2s}
+.inp:focus{background:#fff;border-color:var(--p);box-shadow:0 0 0 1px var(--p)}
+.btn{background:var(--g);color:#fff;font-weight:700;border-radius:999px;padding:.65rem 1.4rem;font-size:.9rem;display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 4px 12px rgba(42,60,118,.3);transition:.2s}
+.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.6}
+.btn-c{background:linear-gradient(135deg,#FE696E,#FF8A8E);box-shadow:0 4px 12px rgba(254,105,110,.35)}
+.btn2{background:#E9ECF5;color:var(--p);box-shadow:none}.btn2:hover{background:var(--pc)}
+.fh,h1,h2,h3,.btn,.nav,.tab,summary,th,#h-age,#h-ten,#h-lv{font-family:Prompt,Sarabun,sans-serif}
+.lbl{display:block;font-size:.8rem;font-weight:700;color:var(--ov);margin-bottom:.35rem}
+.nav{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.45rem 1rem;border-radius:999px;font-size:.68rem;font-weight:600;color:#B4BBD0;min-width:68px;transition:.2s}
+.nav i{font-size:1.15rem}.nav:hover{color:var(--p)}.nav.on{color:var(--p);font-weight:700;background:var(--pc)}
+.tab{padding:.7rem 1rem;font-weight:600;border-bottom:2px solid transparent;color:var(--ov);white-space:nowrap}
+.tab.on{border-color:var(--c);color:var(--p);font-weight:700}
+table{border-collapse:collapse}th,td{padding:.6rem .8rem;font-size:.8rem;text-align:left;white-space:nowrap}
+th{background:#F1F2F6;color:var(--ov);font-weight:700}
+tbody tr{border-top:1px solid #ECEEF4}tbody tr:hover{background:#F7F8FB}
+.chip{padding:.15rem .7rem;border-radius:999px;font-size:.7rem;font-weight:700;display:inline-block}
+details>summary{cursor:pointer;list-style:none}details[open] .ch{transform:rotate(180deg)}
+.fade{animation:f .3s}@keyframes f{from{opacity:0;transform:translateY(5px)}}
+#pa{display:none}.city{background:url("data:image/svg+xml,%3Csvg xmlns='http:%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox='0 0 400 100' preserveAspectRatio='xMidYMax slice'%3E%3Cg fill='%23fff' opacity='.12'%3E%3Crect x='10' y='50' width='30' height='50'%2F%3E%3Crect x='45' y='30' width='26' height='70'%2F%3E%3Crect x='76' y='60' width='22' height='40'%2F%3E%3Crect x='290' y='35' width='28' height='65'%2F%3E%3Crect x='323' y='55' width='30' height='45'%2F%3E%3Crect x='358' y='25' width='30' height='75'%2F%3E%3C%2Fg%3E%3Cg fill='%23fff'%3E%3Crect x='130' y='38' width='110' height='62' rx='4' opacity='.22'%2F%3E%3Crect x='170' y='20' width='30' height='18' rx='3' opacity='.22'%2F%3E%3Crect x='178' y='62' width='24' height='38' opacity='.35'%2F%3E%3Cg opacity='.35'%3E%3Crect x='140' y='48' width='14' height='12'%2F%3E%3Crect x='140' y='68' width='14' height='12'%2F%3E%3Crect x='214' y='48' width='14' height='12'%2F%3E%3Crect x='214' y='68' width='14' height='12'%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3Cpath d='M182 22h6v4h4v6h-4v4h-6v-4h-4v-6h4z' fill='%23FE696E'%2F%3E%3Ccircle cx='262' cy='68' r='6' fill='%23FE696E'%2F%3E%3Crect x='256' y='75' width='12' height='25' rx='6' fill='%23FE696E'%2F%3E%3Ccircle cx='280' cy='70' r='5' fill='%2389A0CF'%2F%3E%3Crect x='275' y='76' width='10' height='24' rx='5' fill='%2389A0CF'%2F%3E%3C%2Fsvg%3E") center bottom/cover no-repeat}#md:not(.hidden),#ck:not(.hidden),#sc:not(.hidden){display:flex}
+.rt{border-collapse:collapse;width:100%}.rt th,.rt td{border:1px solid #9AA3BE;padding:5px 7px;font-size:12px;white-space:normal;vertical-align:top;text-align:left}.rt th{background:#EEF1F8;color:#2A3C76;text-align:center;vertical-align:middle;font-family:Prompt,Sarabun,sans-serif}.rt .c{text-align:center}.rt .r{text-align:right}.rf-doc{font-family:Sarabun,sans-serif;color:#1A1C1E}.rf-doc h3{text-align:center;font-weight:700;font-size:16px;margin:0 0 6px}.rf-doc .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px;margin-bottom:8px}
+@media print{#app,#login,#md,#jserr{display:none!important}#pa{display:block}.rt th,.rt td{border:1px solid #555;font-size:10.5px;padding:3px 4px}.rt th{background:#eee;color:#000}}
+</style></head>
+<body>
+<div id="pa"></div>
+
+<!-- CHECK-IN (QR) -->
+<div id="ck" class="hidden min-h-screen items-center justify-center p-4"><div id="ckw" class="card w-full max-w-md overflow-hidden"></div></div>
+
+<!-- LOGIN -->
+<div id="login" class="min-h-screen flex items-center justify-center p-4">
+<div class="card w-full max-w-4xl flex flex-col md:flex-row overflow-hidden fade">
+ <div class="md:w-5/12 p-10 text-white flex flex-col justify-between gap-10 relative overflow-hidden" style="background:var(--g)"><div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[#89A0CF] opacity-40 pointer-events-none"></div><div class="absolute -bottom-20 -left-10 w-52 h-52 rounded-full bg-[#FE696E] opacity-60 pointer-events-none"></div><div class="city absolute bottom-0 left-0 w-full h-36 pointer-events-none"></div>
+  <img src="https://i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-24 h-24 rounded-3xl object-cover shadow-lg ring-4 ring-white/40 relative z-10" alt="logo">
+  <div class="relative z-10"><h1 class="text-3xl font-bold">HR Workspace</h1><p class="text-sm opacity-80 tracking-widest mt-1">HUMAN RESOURCE SYSTEM</p>
+  <p class="mt-6 text-sm opacity-90">ระบบบริหารจัดการบุคลากร บริษัท โรงพยาบาลรักษ์สกล ดิเวลลอปเม้นท์ จำกัด</p></div>
+ </div>
+ <div class="md:w-7/12 p-8 bg-white">
+  <h2 class="text-2xl font-bold mb-1">เข้าสู่ระบบ</h2><p class="text-sm text-slate-500 mb-5">เลือกประเภทผู้ใช้งาน</p>
+  <div class="flex mb-6 border-b"><button id="t-emp" class="tab on flex-1" onclick="lt('emp')">พนักงาน</button><button id="t-hr" class="tab flex-1" onclick="lt('hr')">ผู้ดูแลระบบ (HR)</button></div>
+  <div id="p-emp">
+   <form id="f-emp" onsubmit="event.preventDefault();eNext(event)" class="space-y-4">
+    <div><label class="lbl">รหัสประจำตัวพนักงาน</label><div class="relative"><i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="li" required placeholder="เช่น EMP-001" class="inp !pl-11 font-mono uppercase"></div></div>
+    <label class="flex gap-2 text-sm bg-[#F1F2F6] p-3 rounded-2xl"><input type="checkbox" required class="mt-1"><span>ข้าพเจ้ายินยอมให้ประมวลผลข้อมูลส่วนบุคคลตาม <a href="#" onclick="event.preventDefault();pdpa()" class="text-[var(--p)] font-bold underline">นโยบาย PDPA</a></span></label>
+    <button class="btn w-full justify-center">ถัดไป <i class="fa-solid fa-arrow-right"></i></button>
+   </form>
+   <div id="s2" class="hidden space-y-4"><div id="wn" class="p-4 rounded-2xl bg-[var(--pc)] font-bold"></div>
+    <div class="relative"><i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="pw1" type="password" placeholder="รหัสผ่าน" class="inp !pl-11" onkeydown="event.key=='Enter'&&eLogin()"></div>
+    <div class="flex gap-3"><button class="btn btn2" onclick="resetLogin()">ยกเลิก</button><button class="btn flex-1 justify-center" onclick="eLogin()">เข้าสู่ระบบ</button></div></div>
+   <div id="s3" class="hidden space-y-3"><p class="text-sm bg-amber-50 text-amber-900 p-3 rounded-2xl">เข้าใช้งานครั้งแรก กรุณาตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร</p>
+    <div class="relative"><i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="pw2" type="password" placeholder="รหัสผ่านใหม่" class="inp !pl-11"></div><div class="relative"><i class="fa-solid fa-check-double absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="pw3" type="password" placeholder="ยืนยันรหัสผ่าน" class="inp !pl-11"></div>
+    <div class="flex gap-3"><button class="btn btn2" onclick="resetLogin()">ยกเลิก</button><button class="btn flex-1 justify-center" onclick="eSetup()">เริ่มต้นใช้งาน</button></div></div>
+  </div>
+  <form id="f-hr" class="hidden space-y-4" onsubmit="event.preventDefault();hrLogin(event)">
+   <div><label class="lbl">ชื่อผู้ใช้งาน</label><div class="relative"><i class="fa-solid fa-user-shield absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="lu" required class="inp !pl-11"></div></div>
+   <div><label class="lbl">รหัสผ่าน</label><div class="relative"><i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="lp" type="password" required class="inp !pl-11"></div></div>
+   <button class="btn w-full justify-center">เข้าสู่ระบบผู้ดูแลระบบ</button>
+  </form>
+ </div>
+</div></div>
+
+<!-- APP -->
+<div id="app" class="hidden fixed inset-0 flex flex-col">
+ <header class="relative overflow-hidden text-white rounded-b-[2.5rem] shadow-lg px-4 md:px-8 pt-4 pb-10" style="background:var(--g)">
+  <div class="city absolute bottom-0 left-0 w-full h-28 pointer-events-none"></div>
+  <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-[#89A0CF] opacity-30 pointer-events-none"></div>
+  <div class="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+   <div class="flex items-center gap-3"><img src="https://i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-10 h-10 rounded-xl object-cover" alt="logo"><b class="hidden sm:block">HR Workspace</b></div>
+   <h2 id="tt" class="text-lg md:text-xl font-bold text-center"></h2>
+   <div class="flex items-center justify-end gap-2">
+    <div class="card !rounded-full flex items-center gap-3 pl-4 pr-1.5 py-1.5"><div class="text-right hidden sm:block"><div id="un" class="text-sm font-bold leading-tight"></div><div id="ur" class="text-[10px] text-slate-500 font-mono"></div></div><div id="ua" class="w-9 h-9 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background:#FE696E"></div></div>
+    <button onclick="askLogout()" class="w-10 h-10 rounded-full bg-[#FE696E] text-white shadow-md shrink-0" title="ออกจากระบบ"><i class="fa-solid fa-power-off"></i></button>
+   </div>
+  </div>
+ </header>
+ <main id="main" class="flex-1 overflow-y-auto px-4 md:px-8 pb-28 pt-5">
+   <section id="v-dashboard" class="v hidden max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-5 gap-3"><p class="text-sm text-slate-500">สถิติกำลังคน การอบรม และอัตราการเข้าออก</p>
+     <div class="flex gap-2"><select id="dy" class="inp !w-auto !rounded-full !py-2 !text-xs font-bold" onchange="dashY(this.value)"></select><button class="btn" onclick="refresh()"><i class="fa-solid fa-arrows-rotate"></i> รีเฟรช</button></div></div>
+    <div id="dc" class="space-y-4"></div>
+   </section>
+   <section id="v-form" class="v hidden"><form id="f" onsubmit="return false" class="space-y-4 max-w-5xl mx-auto"></form></section>
+   <section id="v-directory" class="v hidden max-w-7xl mx-auto">
+    <div class="card p-4 mb-4 flex flex-wrap gap-3"><div class="relative flex-1 min-w-[200px]"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm"></i><input id="dq" oninput="dirList()" placeholder="ค้นหารหัส หรือ ชื่อ..." class="inp !pl-11"></div><select id="dd" onchange="dirList()" class="inp !w-auto"></select><select id="ds" onchange="dirList()" class="inp !w-auto"></select><button class="btn btn2" onclick="lvCmp()"><i class="fa-solid fa-code-compare"></i> เทียบกับระบบลา</button></div>
+    <div id="dn" class="fh font-semibold text-[var(--p)] mb-2 px-1"></div><div id="dtb" class="card divide-y overflow-hidden"></div>
+   </section>
+   <section id="v-reports" class="v hidden max-w-7xl mx-auto">
+    <div id="rtabs" class="flex border-b mb-4 overflow-x-auto"></div>
+    <div id="rf" class="card p-4 mb-4 flex flex-wrap gap-3 items-end"></div>
+    <div id="rbox" class="card overflow-x-auto"><table id="rtb" class="w-full"></table></div><div id="rreg" class="hidden card p-5 overflow-x-auto"></div>
+   </section>
+   <section id="v-training" class="v hidden max-w-3xl mx-auto"><div id="mtb" class="space-y-3"></div></section>
+   <section id="v-courses" class="v hidden max-w-6xl mx-auto"><div id="cw"></div></section>
+   <section id="v-enroll" class="v hidden max-w-3xl mx-auto"><div id="ew"></div></section>
+   <section id="v-licenses" class="v hidden max-w-6xl mx-auto"><div id="mlc" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div></section>
+  </main>
+ <nav id="nav" class="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 bg-white rounded-full shadow-2xl px-3 py-2 flex gap-1 max-w-[96vw]"></nav>
+</div>
+
+<!-- QR SCANNER -->
+<div id="sc" class="hidden fixed inset-0 z-50 bg-slate-900/80 p-4 items-center justify-center"><div class="card !bg-white w-full max-w-md p-5 text-center"><b class="fh text-[var(--p)]"><i class="fa-solid fa-qrcode mr-1"></i> สแกน QR ประจำตัวพนักงาน</b><div id="scmode" class="flex gap-1 bg-[#F1F2F6] rounded-full p-1 mt-3"></div><div class="relative mt-3 rounded-2xl overflow-hidden bg-black" style="aspect-ratio:1/1"><video id="scv" playsinline muted class="w-full h-full object-cover"></video><div class="absolute inset-10 border-4 border-white/80 rounded-2xl pointer-events-none"></div></div><div id="scm" class="text-sm mt-3 text-slate-600"></div><button class="btn btn2 mt-4 w-full justify-center" onclick="scanStop()">ปิดกล้อง</button></div></div>
+<div id="tst" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70] flex flex-col gap-2 items-center pointer-events-none"></div>
+
+<!-- MODAL -->
+<div id="md" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4">
+ <div class="card !bg-white max-w-md w-full p-6 text-center fade"><div id="mi"></div><h3 id="mt" class="text-xl font-bold mb-2"></h3><div id="mb" class="text-sm text-slate-600 text-left max-h-60 overflow-y-auto"></div><div id="mf" class="mt-5 flex gap-3"></div></div>
+</div>
+
+<script>
+const API='https:\/\/script.google.com/macros/s/AKfycbyBSFzAR2tQnlaV2QLdfV_VJiwd7sPKBdvPXsgJXG34a_Nx7uysspRCyHvBqTcoZx_cUw/exec';
+let TOKEN='',PRE=null,TN={},SX=0;
+const DEPTS=['HR-IT','บัญชี','สิทธิประโยชน์-การเงิน','OPD','IPD','เภสัชกรรม','ห้องปฏิบัติการทางการแพทย์','X-Ray','OR-LR','แม่บ้าน','ซักฟอก','หน่วยจ่ายกลาง','โภชนาการ','ศูนย์เปล-ยานยนต์','ช่าง','เวชระเบียน','ส่งเสริมสุขภาพ'];
+const TH=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const $=id=>document.getElementById(id),$$=s=>document.querySelectorAll(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const J=s=>{try{const v=JSON.parse(s||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}};
+const isOut=e=>e.status=='Resigned'||e.status=='ลาออก';
+const nm=e=>`${(e.titlePrefix||'').trim()}${e.firstName||''} ${e.lastName||''}`,N=e=>esc(nm(e));
+const D=s=>{if(!s)return'';const d=new Date(s);return isNaN(d)?esc(s):`${String(d.getDate()).padStart(2,0)}/${String(d.getMonth()+1).padStart(2,0)}/${d.getFullYear()+543}`};
+const age=d=>{if(!d)return'';const b=new Date(d),t=new Date();let a=t.getFullYear()-b.getFullYear();if(t<new Date(t.getFullYear(),b.getMonth(),b.getDate()))a--;return Math.max(a,0)};
+const tr=e=>J(e.trainingHistory),lics=e=>{const l=J(e.licenseDetails);return l.length||!e.licenseName?l:[{name:e.licenseName,no:e.licenseNo,issue:e.licenseIssueDate,exp:e.licenseExpDate}]};
+const sc=e=>isOut(e)?'<span class="chip bg-[#FFE3E4] text-[#D63D43]">ลาออก</span>':e.status=='Probation'?'<span class="chip bg-amber-100 text-amber-800">ทดลองงาน</span>':'<span class="chip bg-green-100 text-green-800">ทำงานอยู่</span>';
+const pd=e=>`${esc(e.position||'-')} / ${esc(e.department||'-')}`;
+function ten(s,e=new Date()){s=new Date(s);if(s>e)return'-';let y=e.getFullYear()-s.getFullYear(),m=e.getMonth()-s.getMonth(),d=e.getDate()-s.getDate();if(d<0){m--;d+=new Date(e.getFullYear(),e.getMonth(),0).getDate()}if(m<0){y--;m+=12}return[y&&y+' ปี',m&&m+' เดือน',(d||!(y||m))&&d+' วัน'].filter(Boolean).join(' ')}
+function leave(s,r,st,Y){if(!s)return 0;const a=new Date(s),y0=a.getFullYear();if(Y<=y0)return 0;let R=null;if((st=='Resigned'||st=='ลาออก')&&r){R=new Date(r);if(R.getFullYear()<Y)return 0}
+ const n=Y-y0,rr=R&&R.getFullYear()==Y;if(n==1){const m=(rr?R.getMonth():11)-a.getMonth()+1;return m>0?Math.floor(m/2):0}
+ const q=n>=10?10:n>=8?8:n>=6?7:6;return rr?Math.floor(q/12*(R.getMonth()+1)):q}
+
+
+let E=[],role,eid='',pw='',cur={},DY,cr='turnover',cv,RD,mcb;
+const L={children:[],licenses:[],training:[],salary:[]};
+const NAV={admin:[['dashboard','แดชบอร์ด','fa-chart-pie','แดชบอร์ด'],['new','เพิ่มพนักงานใหม่','fa-user-plus','เพิ่มใหม่'],['directory','ทำเนียบพนักงาน','fa-address-book','ทำเนียบ'],['courses','อบรม / ลงทะเบียน / เช็คอิน','fa-calendar-check','อบรม'],['reports','ศูนย์รวมรายงาน','fa-file-invoice','รายงาน']],
+ emp:[['profile','แฟ้มประวัติส่วนตัว','fa-user-pen','ประวัติ'],['enroll','ลงทะเบียนอบรม','fa-calendar-check','ลงทะเบียน'],['training','ประวัติการอบรม','fa-chalkboard-user','ประวัติอบรม'],['licenses','รายการใบอนุญาต','fa-id-badge','ใบอนุญาต']]};
+const GAS=()=>{try{return window.google&&google.script&&google.script.run?google.script.run:null}catch(e){return null}};
+const gas=(fn,arg)=>new Promise((ok,no)=>{const r=GAS().withSuccessHandler(ok).withFailureHandler(no);arg===undefined?r[fn]():r[fn](arg)});
+async function srv(fn,arg){let r;try{if(GAS())r=await gas(fn,arg);else{const j=await asJson(await fetch(API,{method:'POST',body:JSON.stringify({rpc:fn,arg:arg})}));if(!j.ok)throw Error(j.message);r=j.data}}
+ catch(e){const m=String(e&&e.message||e).replace(/^(Exception|Error|ScriptError): ?/,'');if(m.indexOf('SESSION')==0){if(TOKEN){TOKEN='';logout();modal('หมดเวลาการใช้งาน','กรุณาเข้าสู่ระบบใหม่','info',()=>{SX=0});SX=1}throw Error(m.replace(/^SESSION: ?/,''))}throw Error(m)}return r}
+async function load(){const r=await srv('apiList',TOKEN);if(!Array.isArray(r))throw Error('รูปแบบข้อมูลไม่ถูกต้อง');E=r}
+function modal(t,b,ty='info',cb){if(SX)return;const c={error:['fa-triangle-exclamation','#FE696E','#FFE3E4'],success:['fa-check','#2E7D32','#E8F5E9'],info:['fa-circle-info','#2A3C76','#DDE3F2']}[ty];
+ $('mi').innerHTML=`<div class="mx-auto w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-3" style="background:${c[2]};color:${c[1]}"><i class="fa-solid ${c[0]}"></i></div>`;$('mt').textContent=t;$('mb').innerHTML=b;mcb=cb;$('mf').innerHTML='<button class="btn w-full justify-center" onclick="closeM()">ตกลง</button>';$('md').classList.remove('hidden')}
+const hideM=()=>{mcb=0;$('md').classList.add('hidden')};
+function busy(t,b=''){if(SX)return;$('mi').innerHTML='<div class="mx-auto w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-3 bg-[var(--pc)] text-[var(--p)]"><i class="fa-solid fa-spinner fa-spin"></i></div>';$('mt').textContent=t;$('mb').innerHTML=b;$('mf').innerHTML='';mcb=0;$('md').classList.remove('hidden')}
+function confirmM(t,b,ok,cb){modal(t,b,'info',cb);$('mf').innerHTML=`<button class="btn btn2 flex-1 justify-center" onclick="hideM()">ยกเลิก</button><button class="btn btn-c flex-1 justify-center" onclick="closeM()">${ok}</button>`}
+const askLogout=()=>confirmM('ออกจากระบบ','<p class="text-center">ต้องการออกจากระบบใช่หรือไม่?</p>','ออกจากระบบ',logout);
+function closeM(){$('md').classList.add('hidden');const c=mcb;mcb=0;c&&c()}
+const pdpa=()=>modal('นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)','<p class="mb-2">บริษัท โรงพยาบาลรักษ์สกล ดิเวลลอปเม้นท์ จำกัด เก็บ ใช้ และเปิดเผยข้อมูลส่วนบุคคลตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 ดังนี้</p><ol class="list-decimal pl-5 space-y-2"><li><b>วัตถุประสงค์:</b> บริหารงานบุคคล ประเมินผล จ่ายค่าตอบแทน สวัสดิการ และปฏิบัติตามกฎหมายแรงงาน</li><li><b>ข้อมูลที่เก็บ:</b> ข้อมูลระบุตัวตน ติดต่อ ครอบครัว การศึกษา การทำงาน บัญชีธนาคาร และเอกสารที่เกี่ยวข้อง</li><li><b>ระยะเวลา:</b> ตลอดการเป็นพนักงาน และตามระยะเวลาที่กฎหมายกำหนดหลังพ้นสภาพ</li></ol>');
+
+
+function lt(t){['emp','hr'].forEach(x=>{$('t-'+x).classList.toggle('on',x==t)});$('p-emp').classList.toggle('hidden',t!='emp');$('f-hr').classList.toggle('hidden',t!='hr')}
+function showErr(e){console.error(e);const m=(e&&(e.message||e.reason&&e.reason.message))||String(e);try{modal('เกิดข้อผิดพลาดในระบบ','<p class="text-xs font-mono break-all">'+esc(m)+'</p>','error')}catch(x){}}
+window.addEventListener('error',showErr);window.addEventListener('unhandledrejection',showErr);
+const setUser=(n,r,a)=>{$('un').textContent=n;$('ur').textContent=r;$('ua').textContent=a};
+async function hrLogin(ev){ev.preventDefault();busy('กำลังเข้าสู่ระบบ...','<p class="text-center">กรุณารอสักครู่</p>');
+ try{const r=await srv('apiLogin',{type:'admin',u:$('lu').value.trim(),pw:$('lp').value});TOKEN=r.token;role='admin';setUser('ผู้ดูแลระบบ HR','Administrator','HR');await load();hideM();$('lp').value='';start()}
+ catch(e){TOKEN='';modal('เข้าสู่ระบบล้มเหลว',esc(e.message),'error')}}
+async function eNext(ev){ev.preventDefault();const b=ev.submitter||$('f-emp').querySelector('button');eid=$('li').value.trim().toUpperCase();b.disabled=true;busy('กำลังตรวจสอบรหัสพนักงาน...');
+ try{const r=await srv('apiCheck',eid);hideM();$('f-emp').classList.add('hidden');
+  if(r.hasPw){$('wn').innerHTML='ยินดีต้อนรับ, '+esc(r.name||eid)+(r.fromLeave?'<div class="text-xs font-normal mt-1"><i class="fa-solid fa-key mr-1"></i>ใช้รหัสผ่านเดียวกับระบบลา</div>':'');$('s2').classList.remove('hidden');setTimeout(()=>$('pw1').focus(),50)}
+  else{$('s3').classList.remove('hidden');setTimeout(()=>$('pw2').focus(),50)}}
+ catch(e){modal('ตรวจสอบรหัสไม่สำเร็จ',esc(e.message),'error')}b.disabled=false}
+async function eAuth(pwd,setup){busy('กำลังเข้าสู่ระบบ...','<p class="text-center">กรุณารอสักครู่</p>');
+ try{const r=await srv('apiLogin',{type:'emp',id:eid,pw:pwd,setup:setup});TOKEN=r.token;const e=r.emp||{empId:eid};if(e.row){E=[e];PRE=null}else{E=[];PRE=e}cur=my();['pw1','pw2','pw3'].forEach(i=>$(i).value='');hideM();enter()}
+ catch(e){TOKEN='';modal('เข้าสู่ระบบล้มเหลว',esc(e.message),'error')}}
+function eLogin(){const v=$('pw1').value;if(!v)return $('pw1').focus();eAuth(v,false)}
+function eSetup(){const a=$('pw2').value;if(a.length<4)return modal('คำแนะนำ','กรุณาตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร');if(a!==$('pw3').value)return modal('ข้อผิดพลาด','รหัสผ่านไม่ตรงกัน','error');eAuth(a,true)}
+function enter(){role='emp';setUser(cur.empId?nm(cur):'พนักงานใหม่',eid,String(cur.firstName||'N').charAt(0));start()}
+function start(){$('login').classList.add('hidden');$('app').classList.remove('hidden');
+ $('nav').innerHTML=NAV[role].map(n=>`<button class="nav" data-k="${n[0]}" onclick="go('${n[0]}')"><i class="fa-solid ${n[2]}"></i><span>${n[3]}</span></button>`).join('');
+ $$('[data-hr]').forEach(x=>x.classList.toggle('hidden',role!='admin'));try{go(role=='admin'?'dashboard':'profile')}catch(e){showErr(e)}}
+function resetLogin(){
+ 
+ $('f-emp').reset();$('f-hr').reset();['pw1','pw2','pw3'].forEach(i=>$(i).value='');
+ $('f-emp').classList.remove('hidden');$('s2').classList.add('hidden');$('s3').classList.add('hidden');lt('emp')}
+function logout(){
+ scanStop();TC=[];TA=[];CS=null;CQ='';CF='all';
+ E=[];role=eid=pw='';cur={};TOKEN='';PRE=null;TN={};DY=cv=RD=mcb=undefined;cr='turnover';
+ L.children=[];L.licenses=[];L.training=[];L.salary=[];
+ $('f').reset();$('dc').innerHTML='';$('rf').innerHTML='';$('rtb').innerHTML='';$('nav').innerHTML='';
+ $$('.v').forEach(x=>x.classList.add('hidden'));
+ $('md').classList.add('hidden');$('pa').innerHTML='';
+ $('app').classList.add('hidden');resetLogin();$('login').classList.remove('hidden');window.scrollTo(0,0)}
+
+function resetPw(){const id=cur.empId;confirmM('รีเซ็ตรหัสผ่าน',`<p class="text-center">ล้างรหัสผ่านในระบบ HR ของ <b>${N(cur)}</b> (${esc(id)})<br><span class="text-xs text-slate-500">ถ้าพนักงานมีบัญชีในระบบลา จะเข้าด้วยรหัสผ่านระบบลาได้ตามเดิม ถ้าไม่มี พนักงานจะได้ตั้งรหัสผ่านใหม่ตอนเข้าสู่ระบบครั้งถัดไป</span></p>`,'รีเซ็ตรหัสผ่าน',async()=>{busy('กำลังรีเซ็ต...');try{const r=await srv('apiResetPw',{token:TOKEN,id:id});modal('รีเซ็ตรหัสผ่านแล้ว',r.fromLeave?'<p class="text-center">พนักงานคนนี้มีบัญชีในระบบลา ให้เข้าสู่ระบบด้วยรหัสผ่านระบบลา</p>':'<p class="text-center">ให้พนักงานเข้าสู่ระบบด้วยรหัสพนักงาน แล้วตั้งรหัสผ่านใหม่</p>','success')}catch(e){modal('รีเซ็ตไม่สำเร็จ',esc(e.message),'error')}})}
+async function lvCmp(){busy('กำลังเทียบรายชื่อกับระบบลา...');let r;try{r=await srv('apiLeaveCompare',TOKEN)}catch(e){return modal('เทียบรายชื่อไม่สำเร็จ',esc(e.message),'error')}
+ const li=(a,f)=>a.length?'<ul class="text-xs divide-y border border-[#ECEEF4] rounded-xl mt-1">'+a.map(f).join('')+'</ul>':'<p class="text-xs text-slate-500 mt-1">ไม่มี</p>';
+ modal('เทียบรายชื่อกับระบบลา',`<div class="grid grid-cols-3 text-center mb-3">${[['ระบบลา',r.leaveCount],['ตรงกัน',r.matched],['ยังไม่มีใน HR',r.missing.length]].map(x=>`<div><b class="fh text-xl text-[var(--p)] block">${x[1]}</b><span class="text-[11px] text-slate-500">${x[0]}</span></div>`).join('')}</div>
+ <b class="text-sm">มีในระบบลา แต่ยังไม่มีในระบบ HR (${r.missing.length})</b>${li(r.missing,x=>`<li class="px-3 py-1.5 flex justify-between gap-2"><span><span class="font-mono">${esc(x.id)}</span> ${esc(x.name)}</span><span class="text-slate-500">${esc(x.dept)}</span></li>`)}
+ <b class="text-sm block mt-3">มีในระบบ HR แต่รหัสไม่ตรงกับระบบลา (${r.notInLeave.length})</b>${li(r.notInLeave,x=>`<li class="px-3 py-1.5"><span class="font-mono">${esc(x.id)}</span> ${esc(x.name)}</li>`)}${r.notInLeave.length?'<p class="text-[11px] text-slate-500 mt-1">แก้รหัสพนักงานให้เป็นเลข 4 หลักตามระบบลาได้ที่แฟ้มประวัติของแต่ละคน (ช่องรหัสด้านบน) แล้วกดบันทึก</p>':''}`,'info');
+ if(r.missing.length)$('mf').innerHTML=`<button class="btn btn2 flex-1 justify-center" onclick="hideM()">ปิด</button><button class="btn btn-c flex-1 justify-center" onclick="lvImport()"><i class="fa-solid fa-file-import"></i> นำเข้า ${r.missing.length} คน</button>`}
+async function lvImport(){busy('กำลังนำเข้ารายชื่อ...');try{const r=await srv('apiLeaveImport',{token:TOKEN});await load();dirList();modal('นำเข้าเรียบร้อย',`<p class="text-center">สร้างข้อมูลตั้งต้นให้พนักงาน <b>${r.added} คน</b> (รหัส ชื่อ แผนก วันเริ่มงาน)<br><span class="text-xs text-slate-500">พนักงานเข้าสู่ระบบด้วยรหัส 4 หลักและรหัสผ่านระบบลา แล้วกรอกแฟ้มประวัติส่วนที่เหลือได้เอง</span></p>`,'success')}catch(e){modal('นำเข้าไม่สำเร็จ',esc(e.message),'error')}}
+function dashY(v){DY=v;dash()}
+function addRow(k){L[k].push({});rl(k)}
+function delRow(k,i){L[k].splice(i,1);rl(k)}
+function setCell(k,i,f,v){if(L[k][i])L[k][i][f]=v}
+const printCur=()=>printHtml(prof(cur)),printAll=()=>printHtml(reg().map(prof).join('')),printReg=()=>printHtml(regForm(),1),xlsReg=()=>xls(regForm(),'ทะเบียนลูกจ้าง.xls');
+const my=()=>E.find(e=>String(e.empId).toUpperCase()==eid)||PRE||{};
+
+
+function go(k,t){cv=k;$$('.v').forEach(x=>x.classList.add('hidden'));const v={new:'form',profile:'form',edit:'form'}[k]||k;$('v-'+v).classList.remove('hidden');
+ $$('.nav').forEach(n=>n.classList.toggle('on',n.dataset.k==(k=='edit'?'directory':k)));
+ $('tt').textContent=t||(NAV[role].find(n=>n[0]==k)||[])[1]||'';$('main').scrollTo(0,0);
+ if(k=='new')fill({});if(k=='profile')fill(my());
+ if(window.scStopStream&&$('sc')&&!$('sc').classList.contains('hidden'))scanStop();
+ ({dashboard:dash,directory:dirList,reports:()=>rep(cr),training:myTr,licenses:myLic,courses:()=>{CS=null;crs()},enroll:enr}[k]||(()=>{}))()}
+async function refresh(){try{await load();go(cv=='edit'?'directory':cv)}catch(e){modal('โหลดข้อมูลไม่สำเร็จ','ตรวจสอบการเชื่อมต่อ','error')}}
+
+
+const TYPES=[['Full-time','ประจำ (Full-time)'],['Part-time','พาร์ทไทม์ (Part-time)'],['Daily','รายวัน (Daily)'],['Freelance','ฟรีแลนซ์ (Freelance)']],ST=[['Active','ทำงานอยู่'],['Probation','ทดลองงาน'],['Resigned','ลาออก']];
+const SEC=[
+['s1','ข้อมูลส่วนบุคคล','fa-user',[['titlePrefix','คำนำหน้า','select',['นาย','นาง','นางสาว','นพ.','พญ.','ภก.','ภญ.','ทพ.','ทพญ.','ดร.'],1],['firstName','ชื่อ','text',0,1],['lastName','นามสกุล','text',0,1],['nationalId','เลขบัตรประชาชน','text',0,1,'maxlength=13 pattern="\\d{13}"'],['nationality','สัญชาติ','text',0,1,'value=ไทย'],['dob','วันเกิด (ค.ศ.)','date',0,1],['gender','เพศ','select',[['Male','ชาย'],['Female','หญิง']],1]]],
+['s2','ข้อมูลการติดต่อ','fa-map-pin',[['phone','เบอร์โทรศัพท์','tel',0,1],['email','อีเมล','email'],['address','ที่อยู่ปัจจุบัน','textarea',0,1],['emergencyContact','ติดต่อฉุกเฉิน (ชื่อ / ความสัมพันธ์ / เบอร์)','text',0,1]]],
+['s3','ประวัติครอบครัว','fa-house-user',[['maritalStatus','สถานภาพ','select',['โสด','สมรส','หย่าร้าง']],['spouseName','ชื่อคู่สมรส','text'],['spouseWorkStatus','สถานะการทำงานคู่สมรส','select',['ทำงาน','ไม่ได้ทำงาน']]],['children']],
+['s4','การศึกษาและใบอนุญาต','fa-graduation-cap',[['eduLevel','ระดับสูงสุด','select',[['มัธยมศึกษา','มัธยมศึกษา/ปวช.'],['อนุปริญญา','อนุปริญญา/ปวส.'],'ปริญญาตรี','ปริญญาโท','ปริญญาเอก'],1],['institution','สถาบัน','text',0,1],['major','คณะ/สาขา','text'],['gradYear','ปีที่จบ','text',0,0,'maxlength=4']],['licenses']],
+['s5','บัญชีรับเงินเดือน','fa-building-columns',[['bankName','ธนาคาร','select',[['KBANK','กสิกรไทย'],['SCB','ไทยพาณิชย์'],['BBL','กรุงเทพ'],['KTB','กรุงไทย']],1],['bankAccount','เลขที่บัญชี','text',0,1]]],
+['s6','เอกสารแนบ (อัปเดตภายหลังได้)','fa-file-arrow-up',[['docIdCard','บัตรประชาชน','file'],['docDegree','วุฒิการศึกษา','file'],['docLicense','ใบประกอบฯ / อื่นๆ','file']]],
+['s7','ข้อมูลการจ้างงาน (สำหรับ HR)','fa-lock',[['department','แผนก','select',DEPTS],['position','ตำแหน่ง','text'],['employeeType','ประเภทการจ้าง','select',TYPES,0,'nb'],['startDate','วันที่เริ่มงาน (ค.ศ.)','date'],['resignDate','วันที่ลาออก (ค.ศ.)','date'],['status','สถานะ','select',ST,0,'nb']],['training','salary'],1]];
+const LS={children:['ข้อมูลบุตร','childrenDetails',[['name','ชื่อ-นามสกุล','text'],['age','อายุ (ปี)','number']]],
+ licenses:['ใบประกอบวิชาชีพ','licenseDetails',[['name','ชื่อใบอนุญาต','text'],['no','เลขที่','text'],['issue','วันที่ออก','date'],['exp','วันหมดอายุ','date']]],
+ training:['การฝึกอบรมและวุฒิบัตร','trainingHistory',[['date','วันที่อบรม','date'],['course','หลักสูตร / โครงการ','text']],1],
+ salary:['ประวัติปรับเงินเดือน','salaryHistory',[['date','วันที่มีผล','date'],['amount','อัตราใหม่ (บาท)','number'],['note','หมายเหตุ','text']]]};
+const K=Object.keys(L),DOCS=['docIdCard','docDegree','docLicense'],IDS=SEC.flatMap(s=>s[3]).filter(f=>f[2]!='file').map(f=>f[0]);
+const IC={titlePrefix:'fa-user-tag',firstName:'fa-user',lastName:'fa-user',nationalId:'fa-id-card',nationality:'fa-flag',dob:'fa-calendar',gender:'fa-venus-mars',phone:'fa-phone',email:'fa-envelope',address:'fa-location-dot',emergencyContact:'fa-kit-medical',maritalStatus:'fa-ring',spouseName:'fa-heart',spouseWorkStatus:'fa-briefcase',eduLevel:'fa-graduation-cap',institution:'fa-building-columns',major:'fa-book',gradYear:'fa-calendar-check',bankName:'fa-building-columns',bankAccount:'fa-credit-card',department:'fa-sitemap',position:'fa-user-tie',employeeType:'fa-user-clock',startDate:'fa-calendar-plus',resignDate:'fa-calendar-xmark',status:'fa-circle-check'};
+const fld=([id,l,t,o,r,a=''])=>{const q=r?'required':'',c='class="inp !pl-11"',
+ ctl=t=='select'?`<select id="${id}" ${q} ${c}>${a=='nb'?'':'<option value="">เลือก</option>'}${o.map(x=>{x=[].concat(x);return`<option value="${x[0]}">${x[1]||x[0]}</option>`}).join('')}</select>`
+ :t=='textarea'?`<textarea id="${id}" rows="2" ${q} ${c}></textarea>`
+ :t=='file'?`<input id="${id}" type="file" accept=".pdf,image/\x2a" class="text-sm w-full"><a id="a-${id}" target="_blank" class="hidden text-xs text-[var(--p)] underline">ดูเอกสารเดิม</a>`
+ :`<input id="${id}" type="${t}" ${q} ${a} ${c}>`;
+ return`<div class="${t=='textarea'?'md:col-span-2':''}"><label class="lbl">${l}${r?' <span class="text-[#FE696E]">*</span>':''}</label>${IC[id]?`<div class="relative"><i class="fa-solid ${IC[id]} absolute left-4 ${t=='textarea'?'top-4':'top-1/2 -translate-y-1/2'} text-[#89A0CF] text-sm pointer-events-none"></i>${ctl}</div>`:ctl}</div>`};
+const sec=([id,t,ic,fs,ls=[],hr,x=''])=>`<details ${hr?'data-hr':''} class="card overflow-hidden"><summary class="px-6 py-4 flex items-center justify-between font-bold text-[var(--p)]"><span class="flex items-center gap-3"><span class="w-9 h-9 rounded-full bg-[var(--pc)] flex items-center justify-center"><i class="fa-solid ${ic}"></i></span>${t}</span><i class="fa-solid fa-chevron-down ch transition text-slate-400"></i></summary>
+ <div class="p-6 border-t border-dashed border-[#C9D0E4] grid md:grid-cols-2 gap-4">${fs.map(fld).join('')}${x}</div>
+ ${ls.map(k=>`<div class="px-6 pb-6"><div class="flex justify-between items-center mb-2"><b class="text-sm">${LS[k][0]}</b><button type="button" class="btn btn2 !py-1 !text-xs" onclick="addRow('${k}')"><i class="fa-solid fa-plus"></i> เพิ่ม</button></div><div id="l-${k}" class="overflow-x-auto"></div></div>`).join('')}</details>`;
+$('f').innerHTML=`<div class="card p-6 pt-0 mt-10 text-center"><div id="h-av" class="w-24 h-24 rounded-full mx-auto -mt-10 ring-4 ring-white shadow-lg flex items-center justify-center text-4xl font-bold text-white" style="background:linear-gradient(135deg,#89A0CF,#2A3C76)">?</div>
+ <div id="h-name" class="fh mt-3 text-lg font-bold text-[var(--p)]">พนักงานใหม่</div>
+ <input id="empId" required placeholder="รหัสพนักงาน เช่น EMP-001" class="text-center bg-transparent font-mono text-sm text-slate-500 outline-none w-full uppercase"><div id="bd" class="mt-2"></div>
+ <div class="grid grid-cols-3 mt-4 pt-4 border-t border-dashed border-[#C9D0E4] text-center divide-x"><div><b id="h-age" class="block text-xl text-[var(--p)]">-</b><span class="text-xs text-slate-500">อายุ (ปี)</span></div><div class="px-1"><b id="h-ten" class="block text-sm text-[var(--p)] leading-7">-</b><span class="text-xs text-slate-500">อายุงาน</span></div><div><b id="h-lv" class="block text-xl text-[#FE696E]">0</b><span class="text-xs text-slate-500">วันพักร้อนปีนี้</span></div></div></div>${SEC.map(sec).join('')}
+ <div class="flex justify-end gap-3 flex-wrap"><button type="button" id="bk" class="btn hidden flex-1 sm:flex-none justify-center" onclick="go('directory')"><i class="fa-solid fa-arrow-left"></i> กลับ</button><button type="button" id="bp" class="btn btn2 hidden flex-1 sm:flex-none justify-center" onclick="printCur()"><i class="fa-solid fa-print"></i> พิมพ์ประวัติ</button><button type="button" id="brp" class="btn btn2 hidden flex-1 sm:flex-none justify-center" onclick="resetPw()"><i class="fa-solid fa-key"></i> รีเซ็ตรหัสผ่าน</button><button id="sb" class="btn btn-c flex-1 sm:flex-none justify-center"><i class="fa-solid fa-save"></i><span id="st">บันทึกข้อมูล</span></button></div>`;
+$('f').addEventListener('invalid',e=>{const d=e.target.closest('details');d&&(d.open=true)},true);
+$('f').addEventListener('input',calc);$('f').addEventListener('change',calc);
+function calc(){const s=$('startDate').value,r=$('resignDate').value,st=$('status').value,o=st=='Resigned'&&r,d=$('dob').value,fn=(($('titlePrefix').value||'')+$('firstName').value+' '+$('lastName').value).trim();
+ $('h-name').textContent=fn||'พนักงานใหม่';$('h-av').textContent=$('firstName').value.charAt(0)||'?';$('h-age').textContent=d?age(d):'-';
+ $('h-ten').textContent=s?ten(s,o?new Date(r):new Date()):'-';$('h-lv').textContent=s?leave(s,r,st,new Date().getFullYear()):0}
+function rl(k){const[,,cols,f]=LS[k];$('l-'+k).innerHTML=`<table class="w-full"><thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join('')}${f?'<th>วุฒิบัตร</th>':''}<th></th></tr></thead><tbody>`+
+ L[k].map((r,i)=>`<tr>${cols.map(c=>`<td><input type="${c[2]}" value="${esc(r[c[0]])}" onchange="setCell('${k}',${i},'${c[0]}',this.value)" class="inp !py-1.5 !text-xs"></td>`).join('')}${f?`<td><input type="file" accept=".pdf,image/\x2a" onchange="setCell('${k}',${i},'_f',this.files[0])" class="text-xs">${r.certUrl?`<a href="${esc(r.certUrl)}" target="_blank" class="text-xs text-[var(--p)] underline block">ดูไฟล์เดิม</a>`:''}</td>`:''}<td><button type="button" class="text-[#FE696E]" onclick="delRow('${k}',${i})"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('')+'</tbody></table>'}
+function fill(e){cur=e;$('f').reset();IDS.forEach(i=>{let v=e[i]==null?'':e[i];if(i=='status'&&v=='ลาออก')v='Resigned';if(v!=='')$(i).value=v});
+ $('empId').value=e.empId||eid||'';$('empId').readOnly=role!='admin';
+ L.children=J(e.childrenDetails);L.licenses=lics(e);L.training=tr(e);L.salary=J(e.salaryHistory);K.forEach(rl);
+ DOCS.forEach(d=>{const u=e[d+'Url'],a=$('a-'+d);a.href=u||'#';a.classList.toggle('hidden',!u)});
+ $('bd').innerHTML=e.empId?sc(e):'';$('bp').classList.toggle('hidden',!e.empId);$('brp').classList.toggle('hidden',!(role=='admin'&&e.row));$('bk').classList.toggle('hidden',!(role=='admin'&&e.empId));
+ $('st').textContent=e.empId?'บันทึกการแก้ไข':'บันทึกข้อมูล';$$('#f details').forEach(d=>d.open=false);calc()}
+function edit(id){const e=E.find(x=>x.empId==id);if(e){fill(e);go('edit','แฟ้มประวัติ: '+nm(e))}}
+const b64=f=>new Promise((ok,no)=>{if(f.size>8e6)return no(Error('ไฟล์ '+f.name+' ใหญ่เกิน 8 MB'));const r=new FileReader;r.onload=()=>ok({name:f.name,type:f.type,data:r.result.split(',')[1]});r.onerror=no;r.readAsDataURL(f)});
+$('f').onsubmit=async ev=>{ev.preventDefault();const b=$('sb'),id=$('empId').value.trim().toUpperCase();
+ if(!cur.row&&E.some(e=>String(e.empId).toUpperCase()==id))return modal('พบข้อมูลซ้ำ',`รหัสพนักงาน <b>${esc(id)}</b> มีอยู่ในระบบแล้ว`,'error');
+ b.disabled=true;
+ try{const p={token:TOKEN,rowNum:cur.row||'',empId:id,files:{}};IDS.forEach(i=>p[i]=$(i).value);p.trainBase=JSON.stringify(tr(cur).map(t=>t.courseId).filter(Boolean));
+  DOCS.forEach(d=>p[d+'Url']=cur[d+'Url']||'');
+  for(const d of DOCS){const f=$(d).files[0];if(f)p.files[d]=await b64(f)}
+  for(let i=0;i<L.training.length;i++)if(L.training[i]._f)p.files['trainCert_'+i]=await b64(L.training[i]._f);
+  K.forEach(k=>p[LS[k][1]]=JSON.stringify(L[k].map(({_f,...r})=>r)));
+  const r=await srv('apiSave',p);if(!r||r.status!='success')throw Error(r&&r.message||'ไม่ทราบสาเหตุ');
+  await load();if(role!='admin'&&E.length)PRE=null;const wasNew=!cur.row;
+  modal('บันทึกข้อมูลสำเร็จ',`ระบบบันทึกข้อมูลของ <b>${esc(($('titlePrefix').value||'')+$('firstName').value+' '+$('lastName').value)}</b> เรียบร้อยแล้ว`,'success',()=>{
+   if(role!='admin')fill(my());else if(wasNew)fill({});else go('directory')})
+ }catch(e){modal('บันทึกไม่สำเร็จ',esc(e.message),'error')}b.disabled=false};
+
+
+const yrs=()=>{const s=new Set([new Date().getFullYear()]);E.forEach(e=>{[e.startDate,e.resignDate].forEach(d=>d&&!isNaN(new Date(d))&&s.add(new Date(d).getFullYear()));tr(e).forEach(t=>t.date&&!isNaN(new Date(t.date))&&s.add(new Date(t.date).getFullYear()))});return[...s].sort((a,b)=>b-a)};
+const st=(l,v,u='',ic='fa-users',hi)=>`<div class="card p-5 ${hi?'!text-white':''}" ${hi?'style="background:var(--g)"':''}><div class="w-10 h-10 rounded-full flex items-center justify-center mb-3 ${hi?'bg-white/20':'bg-[var(--pc)] text-[var(--p)]'}"><i class="fa-solid ${ic}"></i></div><div class="text-xs font-bold ${hi?'opacity-80':'text-slate-500'}">${l}</div><div class="fh text-3xl font-bold ${hi?'':'text-[var(--p)]'}">${v}<span class="text-sm font-medium ml-1">${u}</span></div></div>`;
+function dash(){const Y=+DY||new Date().getFullYear();DY=Y;$('dy').innerHTML=yrs().map(y=>`<option ${y==Y?'selected':''}>${y}</option>`).join('');
+ const a=E.filter(e=>!isOut(e)),n=t=>a.filter(e=>(e.employeeType||'').includes(t)).length,g=a.filter(e=>e.gender=='Male').length,f=a.filter(e=>e.gender=='Female').length,mp=Math.round(g/((g+f)||1)*100),
+ av=x=>x.length?x.reduce((p,c)=>p+c)/x.length:0,ages=a.filter(e=>e.dob).map(e=>age(e.dob)).filter(x=>x>0),tn=a.filter(e=>e.startDate).map(e=>(Date.now()-new Date(e.startDate))/315576e5).filter(x=>x>0),
+ s0=new Date(Y,0,1),s1=new Date(Y,11,31,23,59,59);let as=0,ae=0,nw=0,rs=0;
+ E.forEach(e=>{if(!e.startDate)return;const s=new Date(e.startDate),r=isOut(e)&&e.resignDate?new Date(e.resignDate):null;if(s.getFullYear()==Y)nw++;if(s<s0&&(!r||r>=s0))as++;if(s<=s1&&(!r||r>s1))ae++;if(r&&r.getFullYear()==Y)rs++});
+ const C=new Set,P=new Set,DP=new Set;E.forEach(e=>{const t=tr(e).filter(x=>x.date&&new Date(x.date).getFullYear()==Y);t.forEach(x=>x.course&&C.add(x.course.trim().toLowerCase()));if(t.length){P.add(e.empId);e.department&&DP.add(e.department)}});
+ const avg=(as+ae)/2,al=[];E.forEach(e=>{if(!isOut(e))lics(e).forEach(l=>{if(l.exp){const d=Math.ceil((new Date(l.exp)-Date.now())/864e5);if(d<=60&&d>=-365)al.push([e,l,d])}})});
+ const tp=[['ประจำ',n('Full-time'),'#2A3C76'],['พาร์ทไทม์',n('Part-time'),'#FE696E'],['รายวัน',n('Daily'),'#89A0CF'],['ฟรีแลนซ์',n('Freelance'),'#5BB5A2']],tot=tp.reduce((p,c)=>p+c[1],0);let ac=0;
+ const cg=tot?tp.map(t=>{const x=ac/tot*100;ac+=t[1];return`${t[2]} ${x}% ${ac/tot*100}%`}).join(','):'#ECEEF4 0% 100%';
+ const grid=x=>`<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">${x}</div>`;
+ $('dc').innerHTML=`<div class="grid lg:grid-cols-3 gap-4"><div class="card p-5 lg:col-span-2"><b class="fh block mb-4 text-[var(--p)]">สัดส่วนพนักงานตามประเภทการจ้าง</b><div class="flex items-center gap-8 flex-wrap justify-center sm:justify-start"><div class="relative w-40 h-40 rounded-full shrink-0" style="background:conic-gradient(${cg})"><div class="absolute inset-[22px] rounded-full bg-white flex flex-col items-center justify-center"><b class="text-2xl text-[var(--p)]">${a.length}</b><span class="text-[10px] text-slate-500">คน</span></div></div><ul class="space-y-2 text-sm flex-1 min-w-[160px]">${tp.map(t=>`<li class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:${t[2]}"></span><span class="flex-1 text-slate-600">${t[0]}</span><b>${t[1]}</b></li>`).join('')}</ul></div></div>${st('พนักงานทั้งหมด',a.length,'คน','fa-users',1)}</div>
+ <div class="grid sm:grid-cols-3 gap-4"><div class="card p-5"><div class="fh font-semibold text-[var(--p)] mb-3"><i class="fa-solid fa-venus-mars mr-1"></i> สัดส่วนเพศ</div><div class="flex items-center gap-4"><div class="relative w-24 h-24 rounded-full shrink-0" style="background:conic-gradient(${g+f?`#2A3C76 0% ${mp}%,#FE696E ${mp}% 100%`:'#ECEEF4 0% 100%'})"><div class="absolute inset-3 rounded-full bg-white flex items-center justify-center fh font-bold text-[var(--p)]">${g+f}</div></div><ul class="text-sm space-y-2 flex-1"><li class="flex items-center gap-2"><i class="fa-solid fa-mars text-[#2A3C76]"></i><span class="flex-1">ชาย</span><b>${g}</b></li><li class="flex items-center gap-2"><i class="fa-solid fa-venus text-[#FE696E]"></i><span class="flex-1">หญิง</span><b>${f}</b></li></ul></div></div>${st('อายุเฉลี่ย',Math.round(av(ages)),'ปี','fa-cake-candles')+st('อายุงานเฉลี่ย',av(tn).toFixed(1),'ปี','fa-briefcase')}</div>
+ <div class="grid lg:grid-cols-2 gap-4"><div class="card p-5"><b class="fh block mb-3"><i class="fa-solid fa-chalkboard-user text-[var(--p)]"></i> การพัฒนาบุคลากร ปี ${Y}</b>${grid(st('หลักสูตร',C.size,'เรื่อง','fa-book')+st('ผู้ผ่านการอบรม',P.size,'คน','fa-user-graduate')+st('ครอบคลุมแผนก',DP.size,'แผนก','fa-building')+st('สัดส่วนครอบคลุม',ae?(P.size/ae*100).toFixed(2):'0.00','%','fa-percent'))}</div>
+ <div class="card p-5"><b class="fh block mb-3"><i class="fa-solid fa-person-walking-arrow-right text-[#FE696E]"></i> การเข้าออก (Turnover) ปี ${Y}</b>${grid(st('เข้าใหม่',nw,'คน','fa-user-plus')+st('ลาออก',rs,'คน','fa-user-minus')+st('เฉลี่ยทั้งปี',avg%1?avg.toFixed(1):avg,'คน','fa-users')+st('อัตราการลาออก',avg?(rs/avg*100).toFixed(2):'0.00','%','fa-arrow-trend-down'))}</div></div>
+ <div class="card overflow-hidden"><div class="p-4 bg-amber-50 font-bold text-amber-800 flex justify-between"><span><i class="fa-solid fa-triangle-exclamation"></i> ใบอนุญาตใกล้หมดอายุ</span><span class="chip bg-amber-200">${al.length}</span></div><ul class="divide-y max-h-72 overflow-y-auto">${al.length?al.map(([e,l,d])=>`<li class="p-4 flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0"><i class="fa-solid fa-id-card-clip"></i></span><div class="flex-1"><b class="fh text-sm">${N(e)}</b> <span class="text-xs font-mono text-slate-500">${esc(e.empId)}</span><div class="text-xs text-slate-500">${esc(l.name||'-')} (เลขที่ ${esc(l.no||'-')})</div></div><span class="chip ${d<0?'bg-[#FFE3E4] text-[#D63D43]':'bg-amber-100 text-amber-800'}">${d<0?'หมดอายุแล้ว '+-d:'เหลืออีก '+d} วัน</span></li>`).join(''):'<li class="p-8 text-center text-slate-500">ไม่มีใบอนุญาตที่ใกล้หมดอายุ</li>'}</ul></div>`}
+
+
+const DO='<option value="">ทุกแผนก</option>'+DEPTS.map(d=>`<option>${d}</option>`).join(''),SO='<option value="">ทุกสถานะ</option>'+ST.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join(''),
+ MO='<option value="">ทุกเดือน</option>'+TH.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+$('dd').innerHTML=DO;$('ds').innerHTML=SO;
+const flt=(q,d,s)=>E.filter(e=>`${e.empId} ${e.firstName} ${e.lastName}`.toLowerCase().includes((q||'').toLowerCase())&&(!d||e.department==d)&&(!s||(isOut(e)?'Resigned':e.status)==s));
+function dirList(){const r=flt($('dq').value,$('dd').value,$('ds').value);$('dn').textContent=`รายชื่อพนักงาน ${r.length} คน`;$('dtb').innerHTML=r.length?r.map(e=>`<div class="flex items-center gap-3 p-4 cursor-pointer hover:bg-[#F7F8FB] ${isOut(e)?'opacity-60':''}" data-i="${esc(e.empId)}" onclick="edit(this.dataset.i)"><div class="w-11 h-11 rounded-full bg-[var(--pc)] text-[var(--p)] font-bold flex items-center justify-center shrink-0">${esc(String(e.firstName||'?').charAt(0))}</div><div class="flex-1 min-w-0"><div class="fh font-semibold truncate">${N(e)}</div><div class="text-xs text-slate-500 truncate">${pd(e)} · ${esc(e.phone||'-')}</div></div><div class="text-right shrink-0">${sc(e)}<div class="text-[11px] font-mono text-slate-400 mt-1">${esc(e.empId)}</div></div><i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i></div>`).join(''):'<div class="p-10 text-center text-slate-500">ไม่พบข้อมูลพนักงาน</div>'}
+
+
+const ctl=h=>`<div class="flex-1 min-w-[140px]">${h}</div>`,S=(id,l,o)=>ctl(`<label class="lbl">${l}</label><select id="${id}" class="inp">${o}</select>`),I=(id,l)=>ctl(`<label class="lbl">${l}</label><div class="relative"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm"></i><input id="${id}" class="inp !pl-11"></div>`),
+ YO=(all=1)=>(all?'<option value="">ทุกปี</option>':'')+yrs().map(y=>`<option>${y}</option>`).join('');
+const inM=(d,m,y)=>{if(!d)return false;d=new Date(d);return(!m||d.getMonth()+1==m)&&(!y||d.getFullYear()==y)},V=id=>$(id).value;
+const RI={turnover:'fa-right-left',training:'fa-chalkboard-user',registry:'fa-address-book',leave:'fa-umbrella-beach',probation:'fa-hourglass-half',birthday:'fa-cake-candles'};
+const RP={
+turnover:['พนักงานเข้า-ออก',()=>S('rm','เดือน',MO)+S('ry','ปี (ค.ศ.)',YO())+S('rt','สถานะ','<option value="">เข้า-ออก</option><option value="in">เข้าใหม่</option><option value="out">ลาออก</option>'),['รหัส','ชื่อ-นามสกุล','ตำแหน่ง/แผนก','เริ่มงาน','ลาออก','สถานะ'],
+ ()=>E.filter(e=>{const i=inM(e.startDate,V('rm'),V('ry')),o=isOut(e)&&inM(e.resignDate,V('rm'),V('ry')),t=V('rt');return t=='in'?i:t=='out'?o:i||o}).map(e=>[esc(e.empId),N(e),pd(e),D(e.startDate),D(e.resignDate)||'-',sc(e)])],
+training:['รายงานการอบรม',()=>S('rm','เดือน',MO)+S('ry','ปี (ค.ศ.)',YO())+S('rd','แผนก',DO)+I('rq','รหัสพนักงาน'),['วันที่อบรม','หลักสูตร','รหัส','ชื่อ-นามสกุล','แผนก','วุฒิบัตร'],
+ ()=>E.filter(e=>(!V('rd')||e.department==V('rd'))&&String(e.empId).toLowerCase().includes(V('rq').trim().toLowerCase())).flatMap(e=>tr(e).filter(t=>inM(t.date,V('rm'),V('ry'))).map(t=>[t.date,D(t.date),esc(t.course),esc(e.empId),N(e),esc(e.department||'-'),t.certUrl?`<a href="${esc(t.certUrl)}" target="_blank" class="text-[var(--p)]"><i class="fa-solid fa-file-pdf"></i></a>`:'-'])).sort((a,b)=>a[0]<b[0]?1:-1).map(r=>r.slice(1))],
+registry:['ทะเบียนลูกจ้าง',()=>I('rq','ค้นหารหัส / ชื่อ')+S('rd','แผนก',DO)+S('rs','สถานะ',SO),['รหัส','ชื่อ-นามสกุล','ตำแหน่ง/แผนก','สถานะ'],()=>reg().map(e=>[esc(e.empId),N(e),pd(e),sc(e)])],
+leave:['สิทธิลาพักร้อน',()=>S('ry','ปี (ค.ศ.)',YO(0))+I('rq','ค้นหารหัส / ชื่อ')+S('rd','แผนก',DO),['รหัส','ชื่อ-นามสกุล','ตำแหน่ง/แผนก','เริ่มงาน','อายุงาน (สิ้นปี)','สิทธิลาพักร้อน'],
+ ()=>{const Y=+V('ry');return flt(V('rq'),V('rd')).filter(e=>e.startDate&&new Date(e.startDate).getFullYear()<=Y&&!(isOut(e)&&e.resignDate&&new Date(e.resignDate).getFullYear()<Y)).map(e=>{const r=isOut(e)&&e.resignDate&&new Date(e.resignDate).getFullYear()==Y?new Date(e.resignDate):new Date(Y,11,31);return[esc(e.empId),N(e),pd(e),D(e.startDate),ten(e.startDate,r),`<b>${leave(e.startDate,e.resignDate,e.status,Y)} วัน</b>`]})}],
+probation:['ครบทดลองงาน',()=>S('rd','แผนก',DO),['รหัส','ชื่อ-นามสกุล','ตำแหน่ง/แผนก','เริ่มงาน','ครบกำหนด (119 วัน)','สถานะ'],
+ ()=>E.filter(e=>e.status=='Probation'&&e.startDate&&(!V('rd')||e.department==V('rd'))).map(e=>{const d=new Date(+new Date(e.startDate)+119*864e5),l=Math.ceil((d-new Date())/864e5);return[+d,esc(e.empId),N(e),pd(e),D(e.startDate),D(d),l<0?`<b class="text-[#FE696E]">เลยกำหนด ${-l} วัน</b>`:`<b class="${l<=15?'text-amber-600':'text-green-700'}">เหลือ ${l} วัน</b>`]}).sort((a,b)=>a[0]-b[0]).map(r=>r.slice(1))],
+birthday:['วันเกิด',()=>S('rm','เดือนเกิด',MO),['รหัส','ชื่อ-นามสกุล','ตำแหน่ง/แผนก','วันเกิด','อายุ (ปี)'],
+ ()=>E.filter(e=>!isOut(e)&&e.dob&&(!V('rm')||new Date(e.dob).getMonth()+1==V('rm'))).sort((a,b)=>{a=new Date(a.dob);b=new Date(b.dob);return a.getMonth()-b.getMonth()||a.getDate()-b.getDate()}).map(e=>[esc(e.empId),N(e),pd(e),D(e.dob),age(e.dob)])]};
+const reg=()=>flt(V('rq'),V('rd'),V('rs'));
+const tbl=(h,r)=>`<thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
+function rep(k){cr=k;$('rtabs').innerHTML=Object.keys(RP).map((x,i)=>`<button class="tab ${x==k?'on':''}" onclick="rep('${x}')"><i class="fa-solid ${RI[x]} mr-1.5"></i>${RP[x][0]}</button>`).join('');
+ const rg=k=='registry';$('rf').innerHTML=RP[k][1]()+`<div class="flex gap-2 flex-wrap"><button class="btn" onclick="run()"><i class="fa-solid fa-filter"></i> กรองข้อมูล</button>${rg?'<button class="btn btn-c" onclick="printReg()"><i class="fa-solid fa-print"></i> พิมพ์ทะเบียนลูกจ้าง</button><button class="btn btn2" onclick="xlsReg()"><i class="fa-solid fa-file-excel"></i> ส่งออก Excel</button><button class="btn btn2" onclick="printAll()"><i class="fa-solid fa-address-card"></i> พิมพ์แฟ้มประวัติ</button>':'<button class="btn btn2" onclick="printRep()" title="พิมพ์ / PDF"><i class="fa-solid fa-print"></i></button><button class="btn btn2" onclick="xlsRep()" title="Excel"><i class="fa-solid fa-file-excel"></i></button>'}</div>`;
+ if(k=='leave')$('ry').value=new Date().getFullYear();$$('#rf input,#rf select').forEach(x=>x.addEventListener(x.tagName=='INPUT'?'input':'change',run));run()}
+function run(){try{const R=RP[cr],r=R[3](),rg=cr=='registry';RD=[['ลำดับ',...R[2]],r.map((x,i)=>[i+1,...x])];$('rbox').classList.toggle('hidden',rg);$('rreg').classList.toggle('hidden',!rg);if(rg)$('rreg').innerHTML=r.length?regForm():'<p class="text-center py-10 text-slate-500">ไม่พบข้อมูลตามเงื่อนไขที่ระบุ</p>';$('rtb').innerHTML=r.length?tbl(...RD):'<tbody><tr><td class="text-center py-10 text-slate-500">ไม่พบข้อมูลตามเงื่อนไขที่ระบุ</td></tr></tbody>'}catch(e){console.error(e);RD=null;$('rtb').innerHTML='<tbody><tr><td class="text-[#FE696E]">เกิดข้อผิดพลาดในการแสดงผล</td></tr></tbody>'}}
+const noData=()=>!RD||!RD[1].length&&(modal('แจ้งเตือน','ไม่มีข้อมูลสำหรับพิมพ์/ส่งออก'),true);
+function printRep(){if(noData())return;printHtml(`<h2 style="text-align:center;font-weight:bold;margin-bottom:8px">${RP[cr][0]}</h2><table class="rt" border="1">${tbl(...RD)}</table>`,1)}
+function xlsRep(){if(noData())return;xls('<table border="1">'+tbl(...RD).replace(/<(?!\/?(?:thead|tbody|tr|th|td)\b)[^>]*>/g,'')+'</table>',RP[cr][0]+'.xls')}
+function xls(h,name){const t='<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body>'+h+'</body></html>',a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'application/vnd.ms-excel'}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function printHtml(h,land){$('pa').innerHTML=h;const s=document.createElement('style');s.textContent=`@page{size:${land?'landscape':'portrait'};margin:12mm}`;document.head.appendChild(s);window.print();s.remove();$('pa').innerHTML=''}
+function regForm(){const money=v=>v===''||v==null||isNaN(+v)?esc(v||''):(+v).toLocaleString('th-TH'),
+ rows=reg().map((e,i)=>{const sl=J(e.salaryHistory),s=sl.length?sl[sl.length-1].amount:'',t=e.employeeType||'',col=t=='Daily'?0:t=='Part-time'?2:1,w=['','',''];if(s!=='')w[col]=money(s);
+  return`<tr><td class="c">${i+1}</td><td>${N(e)}</td><td class="c" style="mso-number-format:'\\@'">${esc(e.nationalId||'-')}</td><td class="c">${e.gender=='Male'?'ชาย':e.gender=='Female'?'หญิง':'-'}</td><td class="c">${esc(e.nationality||'ไทย')}</td><td class="c">${D(e.dob)||'-'}</td><td class="c">${e.dob?age(e.dob):'-'}</td><td>${esc(e.address||'-')}</td><td class="c">${D(e.startDate)||'-'}</td><td>${esc(e.position||'-')}</td><td class="r">${w[0]}</td><td class="r">${w[1]}</td><td class="r">${w[2]}</td><td></td><td class="c">${isOut(e)?D(e.resignDate)||'ลาออกแล้ว':''}</td></tr>`}).join('');
+ return`<div class="rf-doc"><h3>ทะเบียนลูกจ้างตามพระราชบัญญัติคุ้มครองแรงงาน พ.ศ.2541</h3><div class="meta"><span>ชื่อห้าง/ร้าน/บริษัท <b>บริษัท โรงพยาบาลรักษ์สกล ดิเวลลอปเม้นท์ จำกัด</b></span><span>ข้อมูล ณ วันที่ ${D(new Date())} &nbsp; จำนวน ${reg().length} คน</span></div>
+ <table class="rt" border="1"><thead><tr><th rowspan="2" style="width:38px">ลำดับที่</th><th rowspan="2" style="min-width:140px">ชื่อ-สกุล</th><th rowspan="2" style="min-width:110px">เลขประจำตัวประชาชน</th><th rowspan="2">เพศ</th><th rowspan="2">สัญชาติ</th><th rowspan="2" style="min-width:80px">วัน เดือน ปี เกิด</th><th rowspan="2">อายุ</th><th rowspan="2" style="min-width:170px">ที่อยู่ปัจจุบัน</th><th rowspan="2" style="min-width:80px">วันที่เริ่มจ้าง</th><th rowspan="2" style="min-width:100px">ตำแหน่งงาน</th><th colspan="3">อัตราค่าจ้าง</th><th rowspan="2">ประโยชน์อื่น</th><th rowspan="2" style="min-width:80px">วันสิ้นสุดการจ้าง</th></tr><tr><th>วันละ</th><th>เดือนละ</th><th>ชั่วโมงละ</th></tr></thead><tbody>${rows}</tbody></table></div>`}
+function prof(e){const ch=J(e.childrenDetails).map(c=>`${esc(c.name)} (${esc(c.age)} ปี)`).join('<br>')||'-',
+ li=lics(e).map(l=>`${esc(l.name)} (เลขที่ ${esc(l.no||'-')}) ออก ${D(l.issue)} หมดอายุ ${D(l.exp)}`).join('<br>')||'-',
+ sa=J(e.salaryHistory).map(s=>`${D(s.date)}: ${esc(s.amount)} บาท (${esc(s.note)})`).join('<br>')||'-',
+ tn=tr(e).map(t=>`${D(t.date)}: ${esc(t.course)}${t.certUrl?' (มีวุฒิบัตร)':''}`).join('<br>')||'-';
+ const P=[['รหัสพนักงาน',e.empId],['สถานะ',isOut(e)?'ลาออก':'ทำงานอยู่'],['แผนก',e.department],['ตำแหน่ง',e.position],['ประเภทการจ้าง',e.employeeType],['วันที่เริ่มงาน',D(e.startDate)],['วันที่ลาออก',D(e.resignDate)],['ชื่อ-นามสกุล',nm(e)],['เลขบัตรประชาชน',e.nationalId],['สัญชาติ',e.nationality],['เพศ',e.gender=='Male'?'ชาย':e.gender=='Female'?'หญิง':'-'],['วันเกิด',D(e.dob)+' (อายุ '+age(e.dob)+' ปี)'],['โทรศัพท์',e.phone],['อีเมล',e.email],['สถานภาพ',e.maritalStatus],['คู่สมรส',e.spouseName],['ระดับการศึกษา',e.eduLevel],['สถาบัน',e.institution],['คณะ/สาขา',e.major],['ปีที่จบ',e.gradYear],['ธนาคาร',e.bankName],['เลขที่บัญชี',e.bankAccount]],
+ W=[['ที่อยู่',esc(e.address)],['ติดต่อฉุกเฉิน',esc(e.emergencyContact)],['บุตร',ch],['ใบอนุญาต',li],['ประวัติเงินเดือน',sa],['การอบรม',tn]],c=v=>v==null||v===''?'-':v;
+ let r='';for(let i=0;i<P.length;i+=2)r+=`<tr><th>${P[i][0]}</th><td>${esc(c(P[i][1]))}</td><th>${P[i+1][0]}</th><td>${esc(c(P[i+1][1]))}</td></tr>`;
+ return`<div style="page-break-after:always"><h2 style="text-align:center;font-weight:bold;margin-bottom:10px">แฟ้มประวัติพนักงาน (Employee Profile)</h2><table class="rt" border="1"><tbody>${r}${W.map(w=>`<tr><th>${w[0]}</th><td colspan="3">${c(w[1])}</td></tr>`).join('')}</tbody></table></div>`}
+
+
+let TC=[],TA=[],CF='all',CQ='',CS=null,scS=null,scT=0,scLast='',scBusy=0;
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,0)+'-'+String(d.getDate()).padStart(2,0)};
+const hm=t=>t?esc(String(t).slice(11,16)):'-';
+const LOADING='<div class="card p-10 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังโหลดข้อมูลการอบรม...</div>';
+async function asJson(res){const t=await res.text();if(/^\s*</.test(t)){const m=t.match(/<title>([^<]*)<\/title>/i);throw Error('ระบบหลังบ้านตอบกลับเป็นหน้าเว็บ'+(m?' ['+m[1].trim()+']':'')+': Code.gs ที่ลิงก์ API ชี้อยู่ยังเป็นรุ่นเก่า ตรวจว่า const API ใน Index.html ตรงกับ URL ของ Deployment ปัจจุบัน')}try{return JSON.parse(t)}catch(e){throw Error('ข้อมูลจากระบบหลังบ้านไม่ถูกต้อง')}}
+async function loadTr(){const r=await srv('apiTraining',TOKEN);if(r&&r.status=='error')throw Error(r.message);if(!r||!Array.isArray(r.courses))throw Error('โหลดข้อมูลหลักสูตรไม่สำเร็จ กรุณาอัปเดต Code.gs และ Deploy ใหม่');TC=r.courses;TA=r.att;TN=r.counts||{}}
+async function trApi(b){const r=await srv('apiTrainingAction',Object.assign({token:TOKEN},b));if(!r||r.status!='success')throw Error(r&&r.message||'ไม่ทราบสาเหตุ');return r}
+function toast(m,ty){const d=document.createElement('div');d.className='fade text-white text-sm font-semibold px-4 py-3 rounded-2xl shadow-xl';d.style.cssText='max-width:92vw;background:'+({ok:'#2E7D32',err:'#FE696E'}[ty]||'#2A3C76');d.innerHTML=m;$('tst').appendChild(d);setTimeout(()=>d.remove(),3800)}
+const loadJs=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=()=>no(Error('โหลดไลบรารีไม่สำเร็จ'));document.head.appendChild(s)});
+async function qr(el,text,size){if(!el)return;el.innerHTML='';try{if(!window.QRCode)await loadJs('https:\/\/cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');new QRCode(el,{text:text,width:size,height:size,correctLevel:QRCode.CorrectLevel.M})}catch(e){el.innerHTML='<img alt="QR" width="'+size+'" height="'+size+'" src="https:\/\/api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(text)+'">'}}
+const qrSrc=el=>{const c=el&&el.querySelector('canvas'),i=el&&el.querySelector('img');return c&&c.width?c.toDataURL():i?i.src:''};
+const ckUrl=id=>(GAS()||!/^https?:/.test(location.href)?API:location.href.split(/[?#]/)[0])+'?checkin='+encodeURIComponent(id);
+const cAt=id=>TA.filter(a=>a.courseId==id);
+const tChip=c=>c.type=='external'?'<span class="chip bg-[#FFE3E4] text-[#D63D43]"><i class="fa-solid fa-plane-departure mr-1"></i>ภายนอก</span>':'<span class="chip bg-[var(--pc)] text-[var(--p)]"><i class="fa-solid fa-hospital mr-1"></i>ภายใน</span>';
+const cOn=c=>{const t=today();return c.date<=t&&t<=(c.endDate||c.date)};
+const cTime=c=>D(c.date)+(c.endDate&&c.endDate!=c.date?' – '+D(c.endDate):'')+(c.start?' เวลา '+esc(c.start)+(c.end?'–'+esc(c.end):'')+' น.':'');
+const ckMsg=r=>r.what=='in'?'<i class="fa-solid fa-circle-check mr-1"></i>'+esc(r.name)+' เช็คอิน '+hm(r.time)+' น.':r.what=='out'?'<i class="fa-solid fa-right-from-bracket mr-1"></i>'+esc(r.name)+' เช็คเอาท์ '+hm(r.time)+' น.':r.what=='reg'?'<i class="fa-solid fa-user-check mr-1"></i>ลงทะเบียน '+esc(r.name)+' แล้ว':esc(r.name)+' เช็คเอาท์ไปแล้วเมื่อ '+hm(r.time)+' น.';
+
+
+async function crs(){$('cw').innerHTML=LOADING;try{await loadTr()}catch(e){$('cw').innerHTML='<div class="card p-10 text-center text-[#D63D43]">'+esc(e.message)+'</div>';return}CS&&TC.some(c=>c.id==CS)?cDetail(CS):cList()}
+function cFilter(f){CF=f;cList()}
+function cSearch(v){CQ=v;$('cgrid').innerHTML=cGrid()}
+function cBack(){CS=null;cList();$('main').scrollTo(0,0)}
+function cOpen(id){CS=id;cDetail(id);$('main').scrollTo(0,0)}
+function cGrid(){const q=CQ.trim().toLowerCase(),l=TC.filter(c=>(CF=='all'||(c.type||'internal')==CF)&&(c.title+' '+c.location+' '+c.organizer).toLowerCase().includes(q)).sort((a,b)=>a.date<b.date?1:-1);
+ return l.length?l.map(c=>{const a=cAt(c.id),n=a.length,i=a.filter(x=>x.checkIn).length,p=a.filter(x=>x.postedAt).length;
+  return`<div class="card p-5 cursor-pointer hover:shadow-lg transition" data-i="${esc(c.id)}" onclick="cOpen(this.dataset.i)"><div class="flex justify-between gap-2 mb-3">${tChip(c)}${c.status=='closed'?'<span class="chip bg-slate-200 text-slate-600">ปิดรับ</span>':cOn(c)?'<span class="chip bg-green-100 text-green-800">วันนี้</span>':''}</div>
+  <div class="fh font-semibold text-[var(--p)] leading-snug">${esc(c.title)}</div><div class="text-xs text-slate-500 mt-2 space-y-1"><div><i class="fa-regular fa-calendar w-4"></i> ${cTime(c)}</div>${c.location?`<div><i class="fa-solid fa-location-dot w-4"></i> ${esc(c.location)}</div>`:''}</div>
+  <div class="grid grid-cols-3 text-center mt-4 pt-3 border-t border-dashed border-[#C9D0E4]">${[['ลงทะเบียน',n+(+c.capacity?'/'+(+c.capacity):'')],['เช็คอิน',i],['เข้าแฟ้มแล้ว',p]].map(x=>`<div><b class="fh block text-[var(--p)]">${x[1]}</b><span class="text-[11px] text-slate-500">${x[0]}</span></div>`).join('')}</div></div>`}).join(''):'<div class="card p-10 text-center text-slate-500 md:col-span-2 lg:col-span-3"><i class="fa-solid fa-book-open text-3xl text-[#89A0CF] mb-3 block"></i>ยังไม่มีหลักสูตร กด "เพิ่มหลักสูตร" เพื่อเริ่มต้น</div>'}
+function cList(){$('cw').innerHTML=`<div class="card p-4 mb-4 flex flex-wrap gap-3 items-center"><div class="flex gap-1 bg-[#F1F2F6] rounded-full p-1">${[['all','ทั้งหมด'],['internal','ภายใน'],['external','ภายนอก']].map(x=>`<button class="fh px-4 py-1.5 rounded-full text-sm font-semibold ${CF==x[0]?'bg-white text-[var(--p)] shadow':'text-slate-500'}" onclick="cFilter('${x[0]}')">${x[1]}</button>`).join('')}</div>
+ <div class="relative flex-1 min-w-[180px]"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm"></i><input id="cq" value="${esc(CQ)}" oninput="cSearch(this.value)" placeholder="ค้นหาหลักสูตร สถานที่ วิทยากร" class="inp !pl-11"></div>
+ <button class="btn" onclick="crs()" title="รีเฟรช"><i class="fa-solid fa-arrows-rotate"></i></button><button class="btn btn-c" onclick="cForm()"><i class="fa-solid fa-plus"></i> เพิ่มหลักสูตร</button></div><div id="cgrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">${cGrid()}</div>`}
+
+
+function cForm(id){const c=TC.find(x=>x.id==id)||{type:'internal',status:'open',date:today()},
+ f=(k,l,t,a)=>`<div><label class="lbl">${l}</label><input id="cf-${k}" type="${t}" value="${esc(c[k]||'')}" class="inp" ${a||''}></div>`;
+ $('cw').innerHTML=`<form class="card p-6 space-y-4 max-w-3xl mx-auto" onsubmit="event.preventDefault();cSave('${esc(c.id||'')}')"><div class="flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-[var(--pc)] text-[var(--p)] flex items-center justify-center"><i class="fa-solid fa-book-open"></i></span><b class="fh text-lg text-[var(--p)]">${c.id?'แก้ไขหลักสูตร':'เพิ่มหลักสูตรใหม่'}</b></div>
+ <div class="grid md:grid-cols-2 gap-4 pt-4 border-t border-dashed border-[#C9D0E4]"><div class="md:col-span-2"><label class="lbl">ชื่อหลักสูตร / หัวข้ออบรม <span class="text-[#FE696E]">*</span></label><input id="cf-title" required value="${esc(c.title||'')}" class="inp"></div>
+ <div><label class="lbl">ประเภทการอบรม</label><select id="cf-type" class="inp"><option value="internal">ภายใน (จัดโดยโรงพยาบาล)</option><option value="external" ${c.type=='external'?'selected':''}>ภายนอก (ส่งไปอบรมนอกองค์กร)</option></select></div>
+ <div><label class="lbl">สถานะ</label><select id="cf-status" class="inp"><option value="open">เปิดรับลงทะเบียน</option><option value="closed" ${c.status=='closed'?'selected':''}>ปิดรับ</option></select></div>
+ ${f('date','วันที่อบรม (ค.ศ.) <span class="text-[#FE696E]">*</span>','date','required')}${f('endDate','ถึงวันที่ (ถ้าอบรมหลายวัน)','date')}${f('start','เวลาเริ่ม','time')}${f('end','เวลาสิ้นสุด','time')}${f('hours','จำนวนชั่วโมง (ว่าง = คำนวณจากเวลาเริ่ม-สิ้นสุด)','number','min="0" step="0.5"')}${f('capacity','จำนวนที่รับ (ว่าง = ไม่จำกัด)','number','min="0"')}${f('location','สถานที่ฝึกอบรม','text')}${f('organizer','วิทยากร / หน่วยงานผู้จัด','text')}<div class="md:col-span-2"><label class="lbl">วิธีการประเมินผล</label><input id="cf-evaluation" value="${esc(c.evaluation||'')}" placeholder="เช่น แบบทดสอบก่อน-หลังอบรม / สังเกตการปฏิบัติ" class="inp"></div>
+ <div class="md:col-span-2"><label class="lbl">รายละเอียดเพิ่มเติม</label><textarea id="cf-note" rows="2" class="inp">${esc(c.note||'')}</textarea></div></div>
+ <div class="flex justify-end gap-3"><button type="button" class="btn btn2" onclick="${c.id?`cOpen('${esc(c.id)}')`:'cBack()'}">ยกเลิก</button><button class="btn btn-c"><i class="fa-solid fa-save"></i> บันทึกหลักสูตร</button></div></form>`;$('main').scrollTo(0,0)}
+async function cSave(id){const c={id:id};['title','type','status','date','endDate','hours','start','end','location','organizer','capacity','note','evaluation'].forEach(k=>c[k]=$('cf-'+k).value.trim());if(c.endDate&&c.endDate<c.date)return modal('วันที่ไม่ถูกต้อง','วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่มอบรม','error');if(!c.hours)c.hours=cHours(c);
+ busy('กำลังบันทึกหลักสูตร...');try{const r=await trApi({action:'saveCourse',course:c});await loadTr();hideM();toast('<i class="fa-solid fa-check mr-1"></i>บันทึกหลักสูตรแล้ว','ok');cOpen(r.id)}catch(e){modal('บันทึกไม่สำเร็จ',esc(e.message),'error')}}
+function cDel(){const c=TC.find(x=>x.id==CS);if(!c)return;confirmM('ลบหลักสูตร',`<p class="text-center">ลบ <b>${esc(c.title)}</b> และรายชื่อผู้ลงทะเบียนทั้งหมด?<br><span class="text-xs text-slate-500">ประวัติที่ส่งเข้าแฟ้มพนักงานแล้วจะยังอยู่</span></p>`,'ลบหลักสูตร',async()=>{busy('กำลังลบ...');try{await trApi({action:'deleteCourse',courseId:c.id});await loadTr();hideM();cBack()}catch(e){modal('ลบไม่สำเร็จ',esc(e.message),'error')}})}
+
+
+function cDetail(id){const c=TC.find(x=>x.id==id);if(!c)return cBack();
+ const row=(i,t)=>t?`<div><i class="fa-solid ${i} w-5 text-[#89A0CF]"></i>${t}</div>`:'';
+ $('cw').innerHTML=`<button class="btn btn2 mb-4" onclick="cBack()"><i class="fa-solid fa-arrow-left"></i> หลักสูตรทั้งหมด</button>
+ <div class="grid lg:grid-cols-3 gap-4"><div class="card p-6 lg:col-span-2"><div class="flex flex-wrap gap-2 mb-2">${tChip(c)}${c.status=='closed'?'<span class="chip bg-slate-200 text-slate-600">ปิดรับ</span>':'<span class="chip bg-green-100 text-green-800">เปิดรับ</span>'}</div>
+  <h3 class="fh text-xl font-bold text-[var(--p)]">${esc(c.title)}</h3><div class="grid sm:grid-cols-2 gap-2 text-sm text-slate-600 mt-3">${row('fa-calendar',cTime(c))}${row('fa-location-dot',esc(c.location))}${row('fa-chalkboard-user',esc(c.organizer))}${row('fa-clock',c.hours?esc(c.hours)+' ชั่วโมง':'')}${row('fa-clipboard-check',c.evaluation?'ประเมินผล: '+esc(c.evaluation):'')}${row('fa-users',+c.capacity?'รับ '+(+c.capacity)+' คน':'')}</div>${c.note?`<p class="text-sm mt-3 text-slate-600">${esc(c.note)}</p>`:''}
+  <div class="flex flex-wrap gap-2 mt-5"><button class="btn btn2 !py-2" onclick="cForm('${esc(c.id)}')"><i class="fa-solid fa-pen"></i> แก้ไข</button><button class="btn btn2 !py-2" onclick="cPrintList()"><i class="fa-solid fa-print"></i> พิมพ์ใบลงชื่อ</button><button class="btn btn2 !py-2" onclick="cPrintTime()"><i class="fa-solid fa-clock"></i> รายงานเวลาเข้า-ออก</button><button class="btn btn2 !py-2" onclick="cXlsTime()"><i class="fa-solid fa-file-excel"></i> Excel เวลาเข้า-ออก</button><button class="btn btn2 !py-2" onclick="cDel()"><i class="fa-solid fa-trash text-[#FE696E]"></i> ลบหลักสูตร</button></div></div>
+ <div class="card p-6 text-center"><b class="fh text-[var(--p)]">QR เช็คอินหลักสูตร</b><p class="text-xs text-slate-500 mb-3">พนักงานสแกนด้วยกล้องมือถือ แล้วกรอกรหัสพนักงาน</p><div id="cqr" class="inline-block p-3 bg-white rounded-2xl border border-[#ECEEF4]"></div>
+  <div class="flex gap-2 justify-center mt-3"><button class="btn btn2 !py-2 !text-xs" onclick="cPrintQr()"><i class="fa-solid fa-print"></i> พิมพ์ QR</button><button class="btn btn2 !py-2 !text-xs" onclick="cCopy()"><i class="fa-solid fa-link"></i> ลิงก์เช็คอิน</button></div></div></div>
+ <div class="card p-5 mt-4"><div class="flex flex-wrap items-center justify-between gap-3 mb-3"><b class="fh text-[var(--p)]"><i class="fa-solid fa-qrcode mr-1"></i> จุดเช็คอิน / ลงทะเบียน</b><label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer"><input type="checkbox" id="cwalk" ${CW?'checked':''} onchange="setCW(this.checked)" class="w-4 h-4"> รับคนที่ยังไม่ลงทะเบียน (ลงชื่อหน้างานให้อัตโนมัติ)</label></div>
+  <div class="text-xs font-bold text-slate-500 mb-1">1. เลือกรายการที่จะบันทึก</div><div id="cmode" class="flex gap-1 bg-[#F1F2F6] rounded-full p-1 mb-3 w-full sm:w-fit">${modeBar()}</div>
+  <div class="text-xs font-bold text-slate-500 mb-1">2. พิมพ์รหัส หรือสแกน QR ประจำตัวพนักงาน</div><div class="flex flex-wrap gap-2">
+  <div class="relative flex-1 min-w-[200px]"><i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm"></i><input id="cid" placeholder="พิมพ์รหัส หรือยิงเครื่องสแกน QR (บันทึกอัตโนมัติ)" autocomplete="off" class="inp !pl-11 font-mono uppercase" oninput="cAuto()" onkeydown="if(event.key=='Enter'){event.preventDefault();cAct(CM)}"><div id="chint" class="text-xs mt-1 min-h-[1rem] pl-1"></div></div>
+  <button id="cgo" class="btn" onclick="cAct(CM)"></button><button class="btn btn2" onclick="scanStart()"><i class="fa-solid fa-camera"></i> สแกนด้วยกล้อง</button></div>
+  <p class="text-xs text-slate-500 mt-1">เมื่อรหัสตรงกับพนักงานในระบบ จะบันทึกตามรายการที่เลือกให้ทันทีโดยไม่ต้องกดปุ่ม</p></div>
+ <div id="cat" class="card mt-4 overflow-hidden"></div>`;cAtt();qr($('cqr'),ckUrl(c.id),170)}
+function cAtt(){const a=cAt(CS).sort((x,y)=>x.regAt>y.regAt?1:-1),n=a.length,i=a.filter(x=>x.checkIn).length,o=a.filter(x=>x.checkOut).length,p=a.filter(x=>x.postedAt).length,pend=a.filter(x=>x.checkIn&&!x.postedAt).length,
+ b=(t,c)=>`<button class="btn btn2 !py-1 !px-3 !text-xs" onclick="${c}">${t}</button>`;
+ cGoBtn();$('cat').innerHTML=`<div class="p-4 flex flex-wrap items-center gap-4 justify-between border-b border-[#ECEEF4]"><div class="flex gap-5 text-sm">${[['ลงทะเบียน',n],['เช็คอิน',i],['เช็คเอาท์',o],['เข้าแฟ้มแล้ว',p]].map(x=>`<div><b class="fh text-xl text-[var(--p)]">${x[1]}</b> <span class="text-slate-500">${x[0]}</span></div>`).join('')}</div>
+ <button class="btn btn-c" onclick="cPost()" ${pend?'':'disabled'}><i class="fa-solid fa-folder-plus"></i> ส่งเข้าแฟ้มประวัติ (${pend})</button></div><div class="overflow-x-auto"><table class="w-full"><thead><tr><th>ลำดับ</th><th>รหัส</th><th>ชื่อ-นามสกุล</th><th>แผนก</th><th>ลงทะเบียนโดย</th><th>เวลาเข้า</th><th>เวลาออก</th><th>แฟ้มประวัติ</th><th></th></tr></thead><tbody>
+ ${n?a.map((x,k)=>`<tr><td>${k+1}</td><td class="font-mono">${esc(x.empId)}</td><td>${esc(x.name)}</td><td>${esc(x.dept||'-')}</td><td>${esc(x.regBy)}</td><td title="${esc(x.checkIn)}">${x.checkIn?'<b class="text-green-700">'+hm(x.checkIn)+'</b>':'-'}</td><td title="${esc(x.checkOut)}">${x.checkOut?'<b class="text-[var(--p)]">'+hm(x.checkOut)+'</b>':'-'}</td><td>${x.postedAt?'<span class="chip bg-green-100 text-green-800">ส่งแล้ว</span>':'-'}</td>
+  <td class="space-x-1">${x.postedAt?'':!x.checkIn?b('เข้า',`cAct('in','${esc(x.empId)}')`)+b('<i class="fa-solid fa-xmark text-[#FE696E]"></i>',`cUnreg('${esc(x.empId)}')`):!x.checkOut?b('ออก',`cAct('out','${esc(x.empId)}')`):''}</td></tr>`).join(''):'<tr><td colspan="9" class="text-center py-10 text-slate-500">ยังไม่มีผู้ลงทะเบียน</td></tr>'}</tbody></table></div>`}
+async function cRefresh(){try{await loadTr()}catch(e){}if(cv=='courses'&&CS&&$('cat'))cAtt()}
+let CM='in',CW=false;try{CM=localStorage.getItem('hr-cm')||'in';CW=localStorage.getItem('hr-cw')=='1'}catch(e){}
+const CMS={in:['เช็คอิน','fa-right-to-bracket','#2E7D32'],out:['เช็คเอาท์','fa-right-from-bracket','#2A3C76'],register:['ลงทะเบียน','fa-user-plus','#FE696E']};
+const modeBar=()=>Object.keys(CMS).map(k=>`<button type="button" class="fh flex-1 sm:flex-none px-4 py-2 rounded-full text-sm font-semibold transition ${CM==k?'text-white shadow':'text-slate-500'}" style="${CM==k?'background:'+CMS[k][2]:''}" onclick="setCM('${k}')"><i class="fa-solid ${CMS[k][1]} mr-1"></i>${CMS[k][0]}</button>`).join('');
+function cGoBtn(){const b=$('cgo'),i=$('cid'),c=CMS[CM];if(b){b.innerHTML=`<i class="fa-solid ${c[1]}"></i> บันทึก${c[0]}`;b.style.background=c[2]}if(i)i.style.borderColor=c[2]}
+function setCM(m){CM=m;try{localStorage.setItem('hr-cm',m)}catch(e){}['cmode','scmode'].forEach(x=>{if($(x))$(x).innerHTML=modeBar()});cGoBtn();const i=$('cid');if(i&&$('sc').classList.contains('hidden'))i.focus();if(scS)$('scm').textContent='โหมด: '+CMS[m][0]+' เล็ง QR ให้อยู่ในกรอบ'}
+function setCW(v){CW=!!v;try{localStorage.setItem('hr-cw',v?'1':'0')}catch(e){}}
+let cTm=0,cBusy=0;
+function cAuto(){clearTimeout(cTm);const i=$('cid'),h=$('chint');if(!i)return;const v=i.value.trim().toUpperCase(),ids=E.map(e=>String(e.empId).toUpperCase());if(h)h.innerHTML='';if(!v)return;
+ const e=E.find(x=>String(x.empId).toUpperCase()==v),longer=ids.some(x=>x!=v&&x.indexOf(v)==0);
+ if(e){if(h)h.innerHTML='<span class="text-green-700"><i class="fa-solid fa-user-check mr-1"></i>'+N(e)+' กำลังบันทึก'+CMS[CM][0]+'...</span>';cTm=setTimeout(()=>{const j=$('cid');if(j&&j.value.trim().toUpperCase()==v)cAct(CM)},longer?900:300)}
+ else if(!longer)cTm=setTimeout(()=>{const j=$('cid');if(j&&j.value.trim().toUpperCase()==v&&$('chint'))$('chint').innerHTML='<span class="text-[#D63D43]">ไม่พบรหัส '+esc(v)+' ในระบบ</span>'},1200)}
+async function cAct(m,who){clearTimeout(cTm);const i=$('cid'),id=String(who||(i&&i.value)||'').trim().toUpperCase();if(!id){toast('กรุณากรอกรหัสพนักงาน','err');i&&i.focus();return}
+ if(cBusy&&!who){cTm=setTimeout(()=>cAct(m),400);return}if(!who){cBusy=1;if(i)i.value='';if($('chint'))$('chint').innerHTML=''}
+ try{const r=await trApi({action:m,courseId:CS,empId:id,by:m=='register'?'แอดมิน':undefined,walkIn:m=='register'?undefined:CW});toast(ckMsg(r),'ok');navigator.vibrate&&navigator.vibrate(80)}catch(e){toast('<i class="fa-solid fa-triangle-exclamation mr-1"></i>'+esc(e.message),'err')}if(!who)cBusy=0;
+ await cRefresh();const j=$('cid');if(j&&!who&&$('sc').classList.contains('hidden'))j.focus()}
+function cUnreg(id){confirmM('ยกเลิกการลงทะเบียน',`<p class="text-center">ลบรหัส <b>${esc(id)}</b> ออกจากหลักสูตรนี้?</p>`,'ลบรายชื่อ',async()=>{try{await trApi({action:'unregister',courseId:CS,empId:id});toast('ลบรายชื่อแล้ว','ok')}catch(e){toast(esc(e.message),'err')}cRefresh()})}
+function cPost(){const a=cAt(CS).filter(x=>x.checkIn&&!x.postedAt),k=a.filter(x=>!x.checkOut).length;
+ confirmM('ส่งเข้าแฟ้มประวัติการอบรม',`<p class="text-center">บันทึกหลักสูตรนี้เข้าแฟ้มประวัติของผู้ที่เช็คอินแล้ว <b>${a.length} คน</b>${k?`<br><span class="text-[#D63D43] text-xs">ในจำนวนนี้ ${k} คนยังไม่เช็คเอาท์</span>`:''}</p>`,'ส่งเข้าแฟ้ม',async()=>{busy('กำลังบันทึกเข้าแฟ้มประวัติ...');
+  try{const r=await trApi({action:'post',courseId:CS});await Promise.all([loadTr(),load()]);modal('ส่งเข้าแฟ้มประวัติแล้ว',`<p class="text-center">บันทึกการอบรมเข้าแฟ้มของพนักงาน <b>${r.posted} คน</b> เรียบร้อย</p>`,'success');cAtt()}catch(e){modal('ส่งไม่สำเร็จ',esc(e.message),'error')}})}
+const THD=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const dObj=s=>{const m=String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+const thLong=s=>{const d=dObj(s);return d?'วัน'+THD[d.getDay()]+'ที่ '+d.getDate()+' '+TH[d.getMonth()]+' '+(d.getFullYear()+543):''};
+const thShort=s=>{const d=dObj(s);return d?d.getDate()+' '+TH[d.getMonth()]+' '+(d.getFullYear()+543):''};
+const cDays=c=>{const a=dObj(c.date),b=dObj(c.endDate)||a,r=[];if(!a)return r;for(let d=new Date(a);d<=b&&r.length<31;d.setDate(d.getDate()+1))r.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,0)+'-'+String(d.getDate()).padStart(2,0));return r};
+const cHours=c=>{if(c.hours)return c.hours;const p=t=>{const m=String(t||'').match(/^(\d{1,2}):(\d{2})/);return m?+m[1]+m[2]/60:null},a=p(c.start),b=p(c.end);return a!=null&&b!=null&&b>a?String(Math.round((b-a)*10)/10):''};
+function cPrintList(){const c=TC.find(x=>x.id==CS);if(!c)return;const days=cDays(c),d0=dObj(c.date),pos=id=>{const e=E.find(x=>String(x.empId).toUpperCase()==String(id).toUpperCase());return e?e.position||'':''};
+ const a=cAt(CS).slice().sort((x,y)=>String(x.dept).localeCompare(String(y.dept),'th')||String(x.empId).localeCompare(String(y.empId),'th',{numeric:true}));
+ const tm=c.start?c.start.replace(':','.')+(c.end?' - '+c.end.replace(':','.'):'')+' น.':'-',hr=cHours(c);
+ const css='<style>.sg{font-family:Sarabun,sans-serif;color:#000;font-size:12px}.sg table{border-collapse:collapse;width:100%}.sg .t td,.sg .t th{border:1px solid #444;padding:4px 5px;vertical-align:middle;white-space:normal;font-size:11.5px}.sg .t th{background:#e9edf5;font-weight:bold;text-align:center}.sg .c{text-align:center}.sg .inf td{border:1px solid #444;padding:4px 6px;font-size:12px;vertical-align:top}.sg .inf .l{background:#f3f5fa;font-weight:bold;width:17%;white-space:nowrap}.sg .pg{page-break-after:always}.sg .pg:last-child{page-break-after:auto}.sg thead{display:table-header-group}.sg tr{page-break-inside:avoid}</style>';
+ const page=day=>{const rows=a.map((x,k)=>`<tr><td class="c">${k+1}</td><td class="c">${esc(x.empId)}</td><td>${esc(x.name)}</td><td>${esc(pos(x.empId))}</td><td>${esc(x.dept||'')}</td><td class="c" style="white-space:nowrap">${thShort(day)}</td><td></td><td></td></tr>`).join('')+'<tr><td style="height:24px"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(Math.max(3,15-a.length));
+  return`<div class="pg"><table style="margin-bottom:6px"><tr><td style="width:30%;vertical-align:middle"><img src="https:\/\/i.postimg.cc\/pXHW7T4D\/Squre-profile-pink-bg.jpg" style="height:38px;width:38px;object-fit:cover;border-radius:8px;vertical-align:middle"> <b style="font-size:15px;vertical-align:middle">รักษ์สกล</b></td><td style="text-align:center;vertical-align:middle"><div style="font-size:17px;font-weight:bold">ใบลงชื่อเข้ารับการอบรม</div><div style="font-size:12px">${c.type=='external'?'การอบรมภายนอก':'การอบรมภายใน'}</div></td><td style="width:30%;text-align:right;vertical-align:top;font-size:11px"><b>FM-HRD-015</b><br>ประจำเดือน ${d0?TH[d0.getMonth()]+' '+(d0.getFullYear()+543):'-'}</td></tr></table>
+  <table class="inf" style="margin-bottom:8px"><tr><td class="l">วันที่อบรม</td><td colspan="3">${days.map(thLong).join('<br>')}</td></tr><tr><td class="l">ชื่อหลักสูตร</td><td colspan="3"><b>${esc(c.title)}</b></td></tr>
+  <tr><td class="l">วิทยากร</td><td>${esc(c.organizer||'-')}</td><td class="l">เวลา</td><td>${esc(tm)}</td></tr><tr><td class="l">สถานที่ฝึกอบรม</td><td>${esc(c.location||'-')}</td><td class="l">จำนวนชั่วโมง</td><td>${hr?esc(hr)+' ชั่วโมง':'-'}</td></tr>
+  <tr><td class="l">วิธีการประเมินผล</td><td colspan="3">${esc(c.evaluation||'')}&nbsp;</td></tr></table>
+  <table class="t"><thead><tr><th rowspan="2" style="width:5%">ที่</th><th rowspan="2" style="width:8%">รหัส<br>พนักงาน</th><th rowspan="2" style="width:22%">ชื่อ - นามสกุล</th><th rowspan="2" style="width:13%">ตำแหน่ง</th><th rowspan="2" style="width:12%">แผนก</th><th colspan="2">ลงชื่อผู้เข้ารับการอบรม</th><th rowspan="2" style="width:8%">หมายเหตุ</th></tr><tr><th style="width:15%">วันที่อบรม</th><th style="width:17%">ลงลายมือชื่อ</th></tr></thead><tbody>${rows}</tbody></table>
+  <table style="margin-top:14px;font-size:12px"><tr><td style="width:50%">จำนวนผู้เข้ารับการอบรม .............. คน</td><td style="text-align:right">ลงชื่อ ...................................................... ผู้ตรวจสอบ</td></tr><tr><td></td><td style="text-align:right;padding-top:4px">(......................................................)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></table></div>`};
+ printHtml(css+'<div class="sg">'+(days.length?days:[c.date]).map(page).join('')+'</div>')}
+const tMin=t=>{const m=String(t||'').match(/^(\d{4}-\d{2}-\d{2}) (\d{2}):(\d{2})/);return m?{d:m[1],m:+m[2]*60+ +m[3]}:null};
+const durTxt=n=>n<=0?'-':(Math.floor(n/60)?Math.floor(n/60)+' ชม. ':'')+(n%60?n%60+' นาที':'');
+function cTimeRows(c){const multi=cDays(c).length>1,pos=id=>{const e=E.find(x=>String(x.empId).toUpperCase()==String(id).toUpperCase());return e?e.position||'':''},hhmm=t=>{const m=String(t||'').match(/(\d{2}):(\d{2})/);return m?+m[1]*60+ +m[2]:null},st=hhmm(c.start),en=hhmm(c.end);
+ const show=t=>!t?'-':(multi?thShort(t.slice(0,10))+' ':'')+t.slice(11,16)+' น.';
+ return cAt(c.id).slice().sort((x,y)=>String(x.dept).localeCompare(String(y.dept),'th')||String(x.empId).localeCompare(String(y.empId),'th',{numeric:true})).map(x=>{const i=tMin(x.checkIn),o=tMin(x.checkOut),dur=i&&o?(o.d==i.d?o.m-i.m:(dObj(o.d)-dObj(i.d))/6e4+o.m-i.m):0,note=[];
+  if(!i)note.push('ไม่ได้เช็คอิน');else{if(st!=null&&i.m-st>0&&i.d==c.date)note.push('สาย '+durTxt(i.m-st).trim());if(!o)note.push('ไม่ได้เช็คเอาท์');else if(en!=null&&en-o.m>0&&o.d==(c.endDate||c.date))note.push('ออกก่อน '+durTxt(en-o.m).trim())}
+  return{x:x,pos:pos(x.empId),inT:show(x.checkIn),outT:show(x.checkOut),dur:durTxt(Math.round(dur)),note:note.join(', ')||(o?'ครบ':''),posted:x.postedAt?'ส่งแล้ว':'-'}})}
+function cTimeTable(c,rows,xl){const td=(v,k)=>`<td${k?' class="c" style="white-space:nowrap"':''}>${v}</td>`,mso=xl?' style="mso-number-format:\'\\@\'"':'';
+ return`<table class="t" border="1"><thead><tr><th style="width:5%">ที่</th><th style="width:8%">รหัส<br>พนักงาน</th><th style="width:18%">ชื่อ - นามสกุล</th><th style="width:11%">ตำแหน่ง</th><th style="width:10%">แผนก</th><th style="width:8%">ลงทะเบียน</th><th style="width:8%">เวลาเข้า</th><th style="width:8%">เวลาออก</th><th style="width:9%">รวมเวลา</th><th style="width:15%">หมายเหตุ</th></tr></thead><tbody>${rows.map((r,k)=>`<tr>${td(k+1,1)}<td class="c"${mso}>${esc(r.x.empId)}</td>${td(esc(r.x.name))}${td(esc(r.pos))}${td(esc(r.x.dept||''))}${td(esc(r.x.regBy||''),1)}${td(r.inT,1)}${td(r.outT,1)}${td(r.dur,1)}<td></td></tr>`).join('')||'<tr><td colspan="10" class="c">ยังไม่มีผู้ลงทะเบียน</td></tr>'}</tbody></table>`}
+function cPrintTime(){const c=TC.find(x=>x.id==CS);if(!c)return;const rows=cTimeRows(c),d0=dObj(c.date),n=rows.length,ci=rows.filter(r=>r.x.checkIn).length,co=rows.filter(r=>r.x.checkOut).length,po=rows.filter(r=>r.x.postedAt).length;
+ const tm=c.start?c.start.replace(':','.')+(c.end?' - '+c.end.replace(':','.'):'')+' น.':'-',hr=cHours(c);
+ const css='<style>.sg{font-family:Sarabun,sans-serif;color:#000;font-size:12px}.sg table{border-collapse:collapse;width:100%}.sg .t td,.sg .t th{border:1px solid #444;padding:4px 5px;vertical-align:middle;white-space:normal;font-size:11px}.sg .t th{background:#e9edf5;font-weight:bold;text-align:center}.sg .c{text-align:center}.sg .inf td{border:1px solid #444;padding:4px 6px;font-size:12px;vertical-align:top}.sg .inf .l{background:#f3f5fa;font-weight:bold;width:17%;white-space:nowrap}.sg thead{display:table-header-group}.sg tr{page-break-inside:avoid}</style>';
+ printHtml(css+`<div class="sg"><table style="margin-bottom:6px"><tr><td style="width:30%;vertical-align:middle"><img src="https:\/\/i.postimg.cc\/pXHW7T4D\/Squre-profile-pink-bg.jpg" style="height:38px;width:38px;object-fit:cover;border-radius:8px;vertical-align:middle"> <b style="font-size:15px;vertical-align:middle">รักษ์สกล</b></td><td style="text-align:center"><div style="font-size:17px;font-weight:bold">รายงานเวลาเข้า-ออกการอบรม</div><div style="font-size:12px">${c.type=='external'?'การอบรมภายนอก':'การอบรมภายใน'}</div></td><td style="width:30%;text-align:right;vertical-align:top;font-size:11px">ประจำเดือน ${d0?TH[d0.getMonth()]+' '+(d0.getFullYear()+543):'-'}<br>พิมพ์เมื่อ ${D(new Date())}</td></tr></table>
+ <table class="inf" style="margin-bottom:8px"><tr><td class="l">วันที่อบรม</td><td colspan="3">${cDays(c).map(thLong).join('<br>')}</td></tr><tr><td class="l">ชื่อหลักสูตร</td><td colspan="3"><b>${esc(c.title)}</b></td></tr>
+ <tr><td class="l">วิทยากร</td><td>${esc(c.organizer||'-')}</td><td class="l">เวลา</td><td>${esc(tm)}</td></tr><tr><td class="l">สถานที่ฝึกอบรม</td><td>${esc(c.location||'-')}</td><td class="l">จำนวนชั่วโมง</td><td>${hr?esc(hr)+' ชั่วโมง':'-'}</td></tr>
+ <tr><td class="l">สรุป</td><td colspan="3">ลงทะเบียน <b>${n}</b> คน &nbsp; เช็คอิน <b>${ci}</b> คน &nbsp; เช็คเอาท์ <b>${co}</b> คน &nbsp; ไม่ได้เช็คอิน <b>${n-ci}</b> คน &nbsp; เข้าแฟ้มประวัติแล้ว <b>${po}</b> คน</td></tr></table>
+ ${cTimeTable(c,rows)}<table style="margin-top:16px;font-size:12px"><tr><td></td><td style="text-align:right;width:55%">ลงชื่อ ...................................................... ผู้รายงาน<br><span style="display:inline-block;margin-top:6px">(......................................................)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr></table></div>`)}
+function cXlsTime(){const c=TC.find(x=>x.id==CS);if(!c)return;const rows=cTimeRows(c);xls(`<h3>รายงานเวลาเข้า-ออกการอบรม: ${esc(c.title)}</h3><p>วันที่ ${cDays(c).map(thShort).join(', ')} เวลา ${esc(c.start||'')}-${esc(c.end||'')} สถานที่ ${esc(c.location||'-')}</p>`+cTimeTable(c,rows,1),'เวลาเข้าออกอบรม_'+c.date+'.xls')}
+function cPrintQr(){const c=TC.find(x=>x.id==CS),src=qrSrc($('cqr'));if(!src)return toast('QR ยังโหลดไม่เสร็จ ลองอีกครั้ง','err');
+ printHtml(`<div style="text-align:center;padding-top:20mm;font-family:Sarabun,sans-serif"><div style="font-size:16px">เช็คอินเข้าอบรม</div><h2 style="font-size:24px;font-weight:bold;margin:6px 0">${esc(c.title)}</h2><div style="font-size:15px">${cTime(c)}${c.location?' ณ '+esc(c.location):''}</div><img src="${src}" style="width:95mm;height:95mm;margin:12mm auto;display:block"><div style="font-size:18px;font-weight:bold">สแกน QR ด้วยกล้องมือถือ แล้วกรอกรหัสพนักงาน</div><div style="font-size:14px;margin-top:4px">กดครั้งแรกเมื่อมาถึง และกดอีกครั้งเมื่ออบรมเสร็จ</div></div>`)}
+async function cCopy(){const u=ckUrl(CS);try{await navigator.clipboard.writeText(u);toast('คัดลอกลิงก์เช็คอินแล้ว','ok')}catch(e){modal('ลิงก์เช็คอินหลักสูตร',`<input readonly value="${esc(u)}" class="inp font-mono !text-xs" onclick="this.select()"><p class="text-xs text-slate-500 mt-2">กดที่ช่องแล้วคัดลอก นำไปส่งในกลุ่มไลน์หรืออีเมลได้</p>`)}}
+
+
+function scStopStream(){cancelAnimationFrame(scT);if(scS){scS.getTracks().forEach(t=>t.stop());scS=null}}
+function scanStop(){scStopStream();$('sc').classList.add('hidden')}
+async function scanStart(){$('sc').classList.remove('hidden');$('scmode').innerHTML=modeBar();$('scm').textContent='กำลังเปิดกล้อง...';scLast='';scBusy=0;
+ try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw Error('เบราว์เซอร์นี้ไม่รองรับกล้อง');
+  scS=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});const v=$('scv');v.srcObject=scS;await v.play();
+  let det=null;if('BarcodeDetector' in window){try{det=new BarcodeDetector({formats:['qr_code']})}catch(e){det=null}}
+  if(!det&&!window.jsQR)await loadJs('https:\/\/cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js');
+  $('scm').textContent='โหมด: '+CMS[CM][0]+' เล็ง QR ให้อยู่ในกรอบ';const cv2=document.createElement('canvas'),cx=cv2.getContext('2d',{willReadFrequently:true});
+  const tick=async()=>{if(!scS)return;if(!scBusy&&v.readyState>=2){let code='';try{if(det){const r=await det.detect(v);code=r[0]&&r[0].rawValue||''}else{cv2.width=v.videoWidth;cv2.height=v.videoHeight;cx.drawImage(v,0,0);const r=jsQR(cx.getImageData(0,0,cv2.width,cv2.height).data,cv2.width,cv2.height);code=r&&r.data||''}}catch(e){code=''}
+   code=String(code).trim();if(code&&code!=scLast){scLast=code;setTimeout(()=>{if(scLast==code)scLast=''},4000);scBusy=1;
+    if(code.indexOf('checkin=')>=0)toast('นี่คือ QR ของหลักสูตร ให้สแกน QR ประจำตัวพนักงาน','err');else{$('scm').textContent='กำลังบันทึก'+CMS[CM][0]+' '+code+' ...';await cAct(CM,code)}
+    scBusy=0;if(scS)$('scm').textContent='โหมด: '+CMS[CM][0]+' เล็ง QR คนถัดไปได้เลย'}}if(scS)scT=requestAnimationFrame(tick)};tick()}
+ catch(e){scStopStream();$('scm').innerHTML='<b class="text-[#D63D43]">สแกนด้วยกล้องไม่ได้</b> ('+esc(e.message||e.name)+')<br>ใช้ช่องกรอกรหัส หรือเครื่องสแกน QR แบบ USB ที่จุดเช็คอินแทนได้'}}
+
+
+async function enr(){$('ew').innerHTML=LOADING;try{await loadTr()}catch(e){$('ew').innerHTML='<div class="card p-10 text-center text-[#D63D43]">'+esc(e.message)+'</div>';return}enrRender()}
+function enrRender(){const me=my(),td=today(),mine=c=>TA.find(a=>a.courseId==c.id&&a.empId==eid),
+ l=TC.filter(c=>(c.status!='closed'&&(c.endDate||c.date)>=td)||(mine(c)&&!mine(c).postedAt)).sort((a,b)=>a.date>b.date?1:-1);
+ $('ew').innerHTML=`<div class="card p-5 mb-4 flex items-center gap-5 flex-wrap"><div id="myqr" class="p-2 bg-white rounded-xl border border-[#ECEEF4]"></div><div class="flex-1 min-w-[180px]"><b class="fh text-[var(--p)] block"><i class="fa-solid fa-qrcode mr-1"></i> QR ประจำตัวของฉัน</b><div class="font-mono text-lg mt-1">${esc(eid)}</div><p class="text-xs text-slate-500 mt-1">แสดง QR นี้ให้เจ้าหน้าที่สแกนที่หน้าห้องอบรม เพื่อลงเวลาเข้าและออก</p></div></div>
+ ${me.row?'':'<div class="card p-4 mb-4 bg-amber-50 text-amber-900 text-sm"><i class="fa-solid fa-circle-info mr-1"></i>กรุณาบันทึกแฟ้มประวัติส่วนตัวก่อน จึงจะลงทะเบียนอบรมได้</div>'}
+ <div class="fh font-semibold text-[var(--p)] mb-2 px-1">หลักสูตรที่เปิดรับ ${l.length} หลักสูตร</div><div class="space-y-3">${l.length?l.map(c=>{const m=mine(c),n=TN[c.id]||0,cap=+c.capacity||0,full=cap&&n>=cap,isToday=cOn(c),
+  st=!m?'':m.postedAt?'<span class="chip bg-green-100 text-green-800">บันทึกเข้าแฟ้มแล้ว</span>':m.checkOut?`<span class="chip bg-[var(--pc)] text-[var(--p)]">เช็คเอาท์ ${hm(m.checkOut)} น.</span>`:m.checkIn?`<span class="chip bg-green-100 text-green-800">เช็คอิน ${hm(m.checkIn)} น.</span>`:'<span class="chip bg-[var(--pc)] text-[var(--p)]">ลงทะเบียนแล้ว</span>',
+  btn=(t,a,k)=>`<button class="btn ${k||''} !py-2" data-c="${esc(c.id)}" onclick="enrAct(this.dataset.c,'${a}')">${t}</button>`,
+  acts=(!m&&c.status!='closed'?(full?'<span class="text-xs text-slate-500">ที่นั่งเต็มแล้ว</span>':btn('<i class="fa-solid fa-user-plus"></i> ลงทะเบียน','register')):'')+(m&&!m.checkIn?btn('ยกเลิก','unregister','btn2'):'')+(isToday&&me.row&&c.status!='closed'&&!(m&&m.checkOut)?btn('<i class="fa-solid fa-fingerprint"></i> '+(m&&m.checkIn?'เช็คเอาท์':'เช็คอิน'),'auto','btn-c'):'');
+  return`<div class="card p-4 flex flex-wrap items-center gap-3"><div class="w-11 h-11 rounded-full bg-[var(--pc)] text-[var(--p)] flex items-center justify-center shrink-0"><i class="fa-solid ${c.type=='external'?'fa-plane-departure':'fa-chalkboard-user'}"></i></div>
+  <div class="flex-1 min-w-[200px]"><div class="flex flex-wrap gap-2 mb-1">${tChip(c)}${isToday?'<span class="chip bg-green-100 text-green-800">วันนี้</span>':''}${st}</div><div class="fh font-semibold">${esc(c.title)}</div><div class="text-xs text-slate-500">${cTime(c)}${c.location?' ณ '+esc(c.location):''}${cap?' (เหลือ '+Math.max(cap-n,0)+' ที่)':''}</div></div><div class="flex gap-2 flex-wrap">${me.row?acts:''}</div></div>`}).join(''):'<div class="card p-10 text-center text-slate-500">ยังไม่มีหลักสูตรที่เปิดรับลงทะเบียน</div>'}</div>`;qr($('myqr'),eid,120)}
+async function enrAct(cid,a){const go2=async()=>{try{const r=await trApi({action:a,courseId:cid,empId:eid});toast(a=='unregister'?'ยกเลิกการลงทะเบียนแล้ว':ckMsg(r),'ok')}catch(e){toast(esc(e.message),'err')}try{await loadTr()}catch(e){}enrRender()};
+ a=='unregister'?confirmM('ยกเลิกการลงทะเบียน','<p class="text-center">ยกเลิกการลงทะเบียนหลักสูตรนี้?</p>','ยกเลิกการลงทะเบียน',go2):go2()}
+
+
+let CK='';
+async function ckInit(id){CK=id;$('login').classList.add('hidden');$('ck').classList.remove('hidden');$('ckw').innerHTML='<div class="p-10 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังโหลดหลักสูตร...</div>';
+ try{await loadTr()}catch(e){$('ckw').innerHTML='<div class="p-8 text-center text-[#D63D43]">'+esc(e.message)+'</div>';return}const c=TC.find(x=>x.id==id);
+ $('ckw').innerHTML=!c?'<div class="p-8 text-center"><i class="fa-solid fa-circle-question text-4xl text-[#89A0CF] mb-3 block"></i><b class="fh">ไม่พบหลักสูตรนี้</b><p class="text-sm text-slate-500 mt-1">QR อาจหมดอายุหรือหลักสูตรถูกลบแล้ว</p><button class="btn btn2 mt-4" onclick="ckExit()">ไปหน้าเข้าสู่ระบบ</button></div>':
+ `<div class="p-6 text-white relative overflow-hidden" style="background:var(--g)"><div class="city absolute bottom-0 left-0 w-full h-24 pointer-events-none"></div><div class="relative z-10 flex items-start gap-3"><img src="https:\/\/i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-12 h-12 rounded-xl object-cover" alt="logo"><div><div class="text-xs opacity-80">เช็คอินเข้าอบรม</div><h2 class="fh text-lg font-bold leading-snug">${esc(c.title)}</h2><div class="text-sm opacity-90 mt-1">${cTime(c)}</div>${c.location?`<div class="text-sm opacity-90">${esc(c.location)}</div>`:''}</div></div></div>
+ <div class="p-6 space-y-4">${c.status=='closed'?'<p class="text-center text-[#D63D43] font-semibold">หลักสูตรนี้ปิดรับแล้ว</p>':`<div><label class="lbl">รหัสประจำตัวพนักงาน</label><div class="relative"><i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="ckid" placeholder="เช่น EMP-001" class="inp !pl-11 !text-lg font-mono uppercase" onkeydown="if(event.key=='Enter')ckGo()"></div></div>
+ <button id="ckb" class="btn btn-c w-full justify-center !py-3" onclick="ckGo()"><i class="fa-solid fa-fingerprint"></i> เช็คอิน / เช็คเอาท์</button><div id="ckr"></div><p class="text-xs text-slate-500 text-center">กดครั้งแรกเมื่อมาถึง และกดอีกครั้งเมื่ออบรมเสร็จ</p>`}<button class="text-sm text-[var(--p)] underline w-full" onclick="ckExit()">ไปหน้าเข้าสู่ระบบ</button></div>`}
+async function ckGo(){const i=$('ckid'),b=$('ckb'),id=i.value.trim().toUpperCase();if(!id)return i.focus();b.disabled=true;
+ const box=(ok,ic,h,s)=>`<div class="fade rounded-2xl p-4 text-center ${ok?'bg-green-50 text-green-800':'bg-[#FFE3E4] text-[#D63D43]'}"><i class="fa-solid ${ic} text-3xl mb-2 block"></i><b class="fh block">${h}</b>${s?'<div class="text-sm mt-1">'+s+'</div>':''}</div>`;
+ try{const r=await trApi({action:'auto',courseId:CK,empId:id});$('ckr').innerHTML=r.what=='in'?box(1,'fa-circle-check','เช็คอินสำเร็จ',esc(r.name)+' เวลา '+hm(r.time)+' น.'):r.what=='out'?box(1,'fa-right-from-bracket','เช็คเอาท์สำเร็จ',esc(r.name)+' เวลา '+hm(r.time)+' น.'):box(1,'fa-circle-info','บันทึกครบแล้ว',esc(r.name)+' เช็คเอาท์ไปแล้วเมื่อ '+hm(r.time)+' น.');i.value=''}
+ catch(e){$('ckr').innerHTML=box(0,'fa-triangle-exclamation','ทำรายการไม่สำเร็จ',esc(e.message))}b.disabled=false}
+function ckExit(){$('ck').classList.add('hidden');$('login').classList.remove('hidden')}
+document.addEventListener('DOMContentLoaded',()=>{let id=(window.QP&&QP.checkin)||new URLSearchParams(location.search).get('checkin');if(id)return ckInit(id);
+ try{google.script.url.getLocation(l=>{const v=l&&l.parameter&&l.parameter.checkin;if(v)ckInit(v)})}catch(e){}});
+
+
+
+function myTr(){const t=tr(my());$('mtb').innerHTML=t.length?t.map(x=>`<div class="card p-4 flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-[var(--pc)] text-[var(--p)] flex items-center justify-center shrink-0"><i class="fa-solid fa-chalkboard-user"></i></div><div class="flex-1 min-w-0"><div class="fh font-semibold">${esc(x.course||'-')}</div><div class="text-xs text-slate-500">${D(x.date)}${x.type?(x.type=='external'?' อบรมภายนอก':' อบรมภายใน'):''}${x.hours?' '+esc(x.hours)+' ชม.':''}${x.checkIn?' เข้า '+hm(x.checkIn)+(x.checkOut?' ออก '+hm(x.checkOut):'')+' น.':''}</div></div>${x.certUrl?`<a href="${esc(x.certUrl)}" target="_blank" class="chip bg-[#FFE3E4] text-[#D63D43]"><i class="fa-solid fa-file-pdf"></i> วุฒิบัตร</a>`:'<span class="text-slate-300">-</span>'}</div>`).join(''):'<div class="card p-10 text-center text-slate-500">ไม่พบประวัติการฝึกอบรม</div>'}
+function myLic(){const l=lics(my());$('mlc').innerHTML=l.length?l.map(x=>{const d=x.exp?Math.ceil((new Date(x.exp)-Date.now())/864e5):null,
+ b=d==null?'<span class="chip bg-slate-100">ไม่มีวันหมดอายุ</span>':d<0?`<span class="chip bg-[#FFE3E4] text-[#D63D43]">หมดอายุแล้ว ${-d} วัน</span>`:d<=60?`<span class="chip bg-amber-100 text-amber-800">หมดอายุใน ${d} วัน</span>`:`<span class="chip bg-green-100 text-green-800">เหลือ ${d} วัน</span>`;
+ return`<div class="card p-5"><div class="flex justify-between mb-3"><i class="fa-solid fa-id-card-clip text-2xl text-[var(--p)]"></i>${b}</div><b class="fh">${esc(x.name||'ไม่ระบุชื่อ')}</b><div class="text-xs font-mono text-slate-500 mb-3">เลขที่: ${esc(x.no||'-')}</div><div class="flex justify-between text-xs border-t pt-3"><span>ออก: ${D(x.issue)||'-'}</span><span>หมดอายุ: ${D(x.exp)||'-'}</span></div></div>`}).join(''):'<div class="card p-10 text-center text-slate-500 col-span-full">ไม่พบข้อมูลใบอนุญาตวิชาชีพ</div>'}
+</script>
+</body></html>
