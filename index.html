@@ -11,23 +11,27 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--p:#2A3C76;--pc:#DDE3F2;--ov:#5B6485;--c:#FE696E;--g:linear-gradient(135deg,#2A3C76,#4A62A8)}
-body{font-family:Sarabun,sans-serif;color:#1A1C1E;background:linear-gradient(160deg,#F1F2F6 0%,#fff 55%,#E4E8F3 100%) fixed}
-.card{color:#1A1C1E;background:#fff;border:1px solid #ECEEF4;border-radius:1.25rem;box-shadow:0 8px 24px rgba(42,60,118,.08)}
-.inp{width:100%;box-sizing:border-box;background:#F1F2F6;border:1px solid transparent;border-radius:.9rem;padding:.65rem 1rem;font-size:.9rem;outline:none;transition:.2s}
-.inp:focus{background:#fff;border-color:var(--p);box-shadow:0 0 0 1px var(--p)}
-.btn{background:var(--g);color:#fff;font-weight:700;border-radius:999px;padding:.65rem 1.4rem;font-size:.9rem;display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 4px 12px rgba(42,60,118,.3);transition:.2s}
+body{font-family:Sarabun,sans-serif;color:#1E2440;background:#F1F2F6}
+.card{color:#1E2440;background:#fff;border:0;border-radius:22px;box-shadow:0 10px 30px rgba(42,60,118,.07)}
+.sheet{background:#fff;border-radius:32px 32px 0 0;min-height:100%;box-shadow:0 -6px 24px rgba(42,60,118,.05)}.sheet .card{background:#F7F8FB;box-shadow:none}.grab{width:44px;height:5px;border-radius:999px;background:#DDE1EC;margin:0 auto 14px}
+.inp{width:100%;box-sizing:border-box;background:#fff;border:1.5px solid #DDE1EC;border-radius:14px;padding:.7rem 1rem;font-size:.92rem;outline:none;transition:.2s}
+.inp:focus{background:#fff;border-color:var(--p)}
+.fl{position:relative}.fl>label{position:absolute;left:14px;top:-9px;background:#fff;padding:0 6px;font-size:12px;font-weight:600;color:var(--p);z-index:1}.fl .inp{height:52px;font-size:1rem}
+.btn{background:var(--p);color:#fff;font-weight:600;border-radius:999px;padding:.7rem 1.4rem;font-size:.9rem;display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 8px 18px rgba(42,60,118,.22);transition:.2s;border:0}
 .btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.6}
-.btn-c{background:linear-gradient(135deg,#FE696E,#FF8A8E);box-shadow:0 4px 12px rgba(254,105,110,.35)}
-.btn2{background:#E9ECF5;color:var(--p);box-shadow:none}.btn2:hover{background:var(--pc)}
+.btn-c{background:linear-gradient(90deg,#FE696E,#F38A8E);box-shadow:0 10px 22px rgba(254,105,110,.32)}
+.btn2{background:#EEF0F6;color:var(--p);box-shadow:none}.btn2:hover{background:var(--pc)}
+.sw{position:relative;display:inline-flex;width:46px;height:26px;flex-shrink:0;cursor:pointer}.sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer;z-index:1;width:100%;height:100%}.sw span{width:46px;height:26px;border-radius:999px;background:#C9CEDD;padding:3px;box-sizing:border-box;transition:.2s;display:flex}.sw span::after{content:'';width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}.sw input:checked+span{background:linear-gradient(90deg,#2A3C76,#FE696E)}.sw input:checked+span::after{transform:translateX(20px)}.sw input:focus-visible+span{outline:2px solid #FE696E;outline-offset:2px}
+.tgl{width:46px;height:26px;border-radius:999px;border:0;padding:3px;background:#C9CEDD;display:flex;flex-shrink:0;cursor:pointer;transition:.2s}.tgl::after{content:'';width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}.tgl[aria-pressed=true]{background:linear-gradient(90deg,#2A3C76,#FE696E)}.tgl[aria-pressed=true]::after{transform:translateX(20px)}.tgl:disabled{opacity:.5;cursor:default}
 .fh,h1,h2,h3,.btn,.nav,.tab,summary,th,#h-age,#h-ten,#h-lv{font-family:Prompt,Sarabun,sans-serif}
 .lbl{display:block;font-size:.8rem;font-weight:700;color:var(--ov);margin-bottom:.35rem}
-.nav{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.45rem 1rem;border-radius:999px;font-size:.68rem;font-weight:600;color:#B4BBD0;min-width:68px;transition:.2s}
-.nav i{font-size:1.15rem}.nav:hover{color:var(--p)}.nav.on{color:var(--p);font-weight:700;background:var(--pc)}
-.tab{padding:.7rem 1rem;font-weight:600;border-bottom:2px solid transparent;color:var(--ov);white-space:nowrap}
-.tab.on{border-color:var(--c);color:var(--p);font-weight:700}
+.nav{display:flex;flex-direction:column;align-items:center;gap:.4rem;font-size:.72rem;font-weight:500;color:#5B6485;min-width:64px;background:none;border:0;padding:0;flex-shrink:0}.nav .ic{width:52px;height:52px;border-radius:16px;background:#fff;color:var(--p);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(42,60,118,.06);transition:.2s}
+.nav i{font-size:1.15rem}.nav:hover .ic{background:var(--pc)}.nav.on{color:var(--p);font-weight:700}.nav.on .ic{background:var(--p);color:#fff;box-shadow:0 8px 18px rgba(42,60,118,.3)}
+.tab{padding:.55rem 1.1rem;font-weight:500;border-radius:999px;color:var(--p);white-space:nowrap;background:transparent;border:0;font-size:.85rem}#rtabs .tab{background:#F1F2F6}
+.tab.on,#rtabs .tab.on{background:var(--p);color:#fff;font-weight:600}
 table{border-collapse:collapse}th,td{padding:.6rem .8rem;font-size:.8rem;text-align:left;white-space:nowrap}
-th{background:#F1F2F6;color:var(--ov);font-weight:700}
-tbody tr{border-top:1px solid #ECEEF4}tbody tr:hover{background:#F7F8FB}
+th{background:#EEF0F6;color:var(--ov);font-weight:600}
+tbody tr{border-top:1px solid #E6E9F1}tbody tr:hover{background:#fff}
 .chip{padding:.15rem .7rem;border-radius:999px;font-size:.7rem;font-weight:700;display:inline-block}
 details>summary{cursor:pointer;list-style:none}details[open] .ch{transform:rotate(180deg)}
 .fade{animation:f .3s}@keyframes f{from{opacity:0;transform:translateY(5px)}}
@@ -43,51 +47,43 @@ details>summary{cursor:pointer;list-style:none}details[open] .ch{transform:rotat
 
 <!-- LOGIN -->
 <div id="login" class="min-h-screen flex items-center justify-center p-4">
-<div class="card w-full max-w-4xl flex flex-col md:flex-row overflow-hidden fade">
- <div class="md:w-5/12 p-10 text-white flex flex-col justify-between gap-10 relative overflow-hidden" style="background:var(--g)"><div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[#89A0CF] opacity-40 pointer-events-none"></div><div class="absolute -bottom-20 -left-10 w-52 h-52 rounded-full bg-[#FE696E] opacity-60 pointer-events-none"></div><div class="city absolute bottom-0 left-0 w-full h-36 pointer-events-none"></div>
-  <img src="https://i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-24 h-24 rounded-3xl object-cover shadow-lg ring-4 ring-white/40 relative z-10" alt="logo">
-  <div class="relative z-10"><h1 class="text-3xl font-bold">HR Workspace</h1><p class="text-sm opacity-80 tracking-widest mt-1">HUMAN RESOURCE SYSTEM</p>
-  <p class="mt-6 text-sm opacity-90">ระบบบริหารจัดการบุคลากร บริษัท โรงพยาบาลรักษ์สกล ดิเวลลอปเม้นท์ จำกัด</p></div>
- </div>
- <div class="md:w-7/12 p-8 bg-white">
-  <h2 class="text-2xl font-bold mb-1">เข้าสู่ระบบ</h2><p class="text-sm text-slate-500 mb-5">เลือกประเภทผู้ใช้งาน</p>
-  <div class="flex mb-6 border-b"><button id="t-emp" class="tab on flex-1" onclick="lt('emp')">พนักงาน</button><button id="t-hr" class="tab flex-1" onclick="lt('hr')">ผู้ดูแลระบบ (HR)</button></div>
-  <div id="p-emp">
-   <form id="f-emp" onsubmit="event.preventDefault();eNext(event)" class="space-y-4">
-    <div><label class="lbl">รหัสประจำตัวพนักงาน</label><div class="relative"><i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="li" required placeholder="เช่น EMP-001" class="inp !pl-11 font-mono uppercase"></div></div>
-    <label class="flex gap-2 text-sm bg-[#F1F2F6] p-3 rounded-2xl"><input type="checkbox" required class="mt-1"><span>ข้าพเจ้ายินยอมให้ประมวลผลข้อมูลส่วนบุคคลตาม <a href="#" onclick="event.preventDefault();pdpa()" class="text-[var(--p)] font-bold underline">นโยบาย PDPA</a></span></label>
-    <button class="btn w-full justify-center">ถัดไป <i class="fa-solid fa-arrow-right"></i></button>
-   </form>
-   <div id="s2" class="hidden space-y-4"><div id="wn" class="p-4 rounded-2xl bg-[var(--pc)] font-bold"></div>
-    <div class="relative"><i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="pw1" type="password" placeholder="รหัสผ่าน" class="inp !pl-11" onkeydown="event.key=='Enter'&&eLogin()"></div>
-    <div class="flex gap-3"><button class="btn btn2" onclick="resetLogin()">ยกเลิก</button><button class="btn flex-1 justify-center" onclick="eLogin()">เข้าสู่ระบบ</button></div></div>
-   <div id="s3" class="hidden space-y-3"><p class="text-sm bg-amber-50 text-amber-900 p-3 rounded-2xl">เข้าใช้งานครั้งแรก กรุณาตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร</p>
-    <div class="relative"><i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="pw2" type="password" placeholder="รหัสผ่านใหม่" class="inp !pl-11"></div><div class="relative"><i class="fa-solid fa-check-double absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="pw3" type="password" placeholder="ยืนยันรหัสผ่าน" class="inp !pl-11"></div>
-    <div class="flex gap-3"><button class="btn btn2" onclick="resetLogin()">ยกเลิก</button><button class="btn flex-1 justify-center" onclick="eSetup()">เริ่มต้นใช้งาน</button></div></div>
-  </div>
-  <form id="f-hr" class="hidden space-y-4" onsubmit="event.preventDefault();hrLogin(event)">
-   <div><label class="lbl">ชื่อผู้ใช้งาน</label><div class="relative"><i class="fa-solid fa-user-shield absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="lu" required class="inp !pl-11"></div></div>
-   <div><label class="lbl">รหัสผ่าน</label><div class="relative"><i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm pointer-events-none"></i><input id="lp" type="password" required class="inp !pl-11"></div></div>
-   <button class="btn w-full justify-center">เข้าสู่ระบบผู้ดูแลระบบ</button>
+<div class="card w-full max-w-md relative overflow-hidden fade px-7 pt-10 pb-8 !rounded-[32px]">
+ <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[var(--pc)] pointer-events-none"></div><div class="absolute right-10 top-16 w-12 h-12 rounded-full bg-[#FE696E] opacity-80 pointer-events-none"></div>
+ <div class="relative flex items-center gap-3"><img src="https://i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-12 h-12 rounded-2xl object-cover" alt="โลโก้"><div><div class="fh font-bold text-[var(--p)]">HR Workspace</div><div class="text-xs text-slate-500">โรงพยาบาลรักษ์สกล</div></div></div>
+ <h1 class="relative mt-10 text-[32px] leading-tight font-semibold text-[var(--p)]">เข้าสู่ระบบ</h1><p class="text-sm text-slate-500 mt-1 mb-6">พนักงานใช้รหัส 4 หลัก และรหัสผ่านเดียวกับระบบลา</p>
+ <div class="flex bg-[#F1F2F6] rounded-full p-1 mb-7"><button id="t-emp" class="tab on flex-1" onclick="lt('emp')">พนักงาน</button><button id="t-hr" class="tab flex-1" onclick="lt('hr')">ผู้ดูแลระบบ</button></div>
+ <div id="p-emp">
+  <form id="f-emp" onsubmit="event.preventDefault();eNext(event)" class="space-y-5">
+   <div class="fl"><label for="li">รหัสพนักงาน</label><input id="li" required placeholder="เช่น 2101" autocomplete="username" class="inp font-mono uppercase"></div>
+   <label class="flex gap-2 text-sm text-slate-600 leading-relaxed"><input type="checkbox" required class="mt-1 w-4 h-4 accent-[#2A3C76]"><span>ยินยอมให้ประมวลผลข้อมูลส่วนบุคคลตาม <a href="#" onclick="event.preventDefault();pdpa()" class="text-[var(--p)] font-semibold underline">นโยบาย PDPA</a></span></label>
+   <button class="btn btn-c w-full justify-center !py-3.5 !text-base">ถัดไป <i class="fa-solid fa-arrow-right"></i></button>
   </form>
+  <div id="s2" class="hidden space-y-5"><div id="wn" class="p-4 rounded-2xl bg-[var(--pc)] font-semibold text-[var(--p)]"></div>
+   <div class="fl"><label for="pw1">รหัสผ่าน</label><input id="pw1" type="password" autocomplete="current-password" placeholder="รหัสผ่าน" class="inp" onkeydown="event.key=='Enter'&&eLogin()"></div>
+   <div class="flex gap-3"><button class="btn btn2" onclick="resetLogin()">ยกเลิก</button><button class="btn btn-c flex-1 justify-center" onclick="eLogin()">เข้าสู่ระบบ</button></div></div>
+  <div id="s3" class="hidden space-y-5"><p class="text-sm bg-amber-50 text-amber-900 p-3 rounded-2xl">เข้าใช้งานครั้งแรก กรุณาตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร</p>
+   <div class="fl"><label for="pw2">รหัสผ่านใหม่</label><input id="pw2" type="password" autocomplete="new-password" class="inp"></div><div class="fl"><label for="pw3">ยืนยันรหัสผ่าน</label><input id="pw3" type="password" autocomplete="new-password" class="inp"></div>
+   <div class="flex gap-3"><button class="btn btn2" onclick="resetLogin()">ยกเลิก</button><button class="btn btn-c flex-1 justify-center" onclick="eSetup()">เริ่มต้นใช้งาน</button></div></div>
  </div>
+ <form id="f-hr" class="hidden space-y-5" onsubmit="event.preventDefault();hrLogin(event)">
+  <div class="fl"><label for="lu">ชื่อผู้ใช้งาน</label><input id="lu" required autocomplete="username" class="inp"></div>
+  <div class="fl"><label for="lp">รหัสผ่าน</label><input id="lp" type="password" required autocomplete="current-password" class="inp"></div>
+  <button class="btn btn-c w-full justify-center !py-3.5 !text-base">เข้าสู่ระบบผู้ดูแลระบบ</button>
+ </form>
+ <p class="text-center text-sm text-slate-500 mt-7">ลืมรหัสผ่าน? <b class="text-[var(--p)]">ติดต่อฝ่ายบุคคล</b></p>
 </div></div>
 
 <!-- APP -->
 <div id="app" class="hidden fixed inset-0 flex flex-col">
- <header class="relative overflow-hidden text-white rounded-b-[2.5rem] shadow-lg px-4 md:px-8 pt-4 pb-10" style="background:var(--g)">
-  <div class="city absolute bottom-0 left-0 w-full h-28 pointer-events-none"></div>
-  <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-[#89A0CF] opacity-30 pointer-events-none"></div>
-  <div class="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-   <div class="flex items-center gap-3"><img src="https://i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-10 h-10 rounded-xl object-cover" alt="logo"><b class="hidden sm:block">HR Workspace</b></div>
-   <h2 id="tt" class="text-lg md:text-xl font-bold text-center"></h2>
-   <div class="flex items-center justify-end gap-2">
-    <div class="card !rounded-full flex items-center gap-3 pl-4 pr-1.5 py-1.5"><div class="text-right hidden sm:block"><div id="un" class="text-sm font-bold leading-tight"></div><div id="ur" class="text-[10px] text-slate-500 font-mono"></div></div><div id="ua" class="w-9 h-9 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background:#FE696E"></div></div>
-    <button onclick="askLogout()" class="w-10 h-10 rounded-full bg-[#FE696E] text-white shadow-md shrink-0" title="ออกจากระบบ"><i class="fa-solid fa-power-off"></i></button>
-   </div>
-  </div>
+ <header class="w-full max-w-7xl mx-auto px-4 md:px-8 pt-5 flex items-center gap-3">
+  <img src="https://i.postimg.cc/pXHW7T4D/Squre-profile-pink-bg.jpg" class="w-11 h-11 rounded-2xl object-cover" alt="โลโก้">
+  <div class="flex-1 min-w-0"><div class="text-xs text-slate-500">สวัสดี</div><div id="un" class="fh font-semibold text-lg text-[var(--p)] truncate leading-tight"></div><div id="ur" class="text-[11px] text-slate-500 font-mono"></div></div>
+  <div id="ua" class="w-11 h-11 rounded-full border-2 border-[var(--p)] text-[var(--p)] flex items-center justify-center fh font-semibold text-sm shrink-0"></div>
+  <button onclick="askLogout()" class="w-11 h-11 rounded-full bg-[#FE696E] text-white shadow-md shrink-0" title="ออกจากระบบ" aria-label="ออกจากระบบ"><i class="fa-solid fa-power-off"></i></button>
  </header>
- <main id="main" class="flex-1 overflow-y-auto px-4 md:px-8 pb-28 pt-5">
+ <nav id="nav" class="w-full max-w-7xl mx-auto px-4 md:px-8 pt-5 pb-4 flex gap-3 overflow-x-auto"></nav>
+ <main id="main" class="flex-1 overflow-y-auto"><div class="sheet max-w-7xl mx-auto px-4 md:px-8 pt-3 pb-12"><div class="grab"></div><h2 id="tt" class="text-lg md:text-xl font-semibold text-[var(--p)] mb-4"></h2>
+
    <section id="v-dashboard" class="v hidden max-w-7xl mx-auto">
     <div class="flex justify-between items-center mb-5 gap-3"><p class="text-sm text-slate-500">สถิติกำลังคน การอบรม และอัตราการเข้าออก</p>
      <div class="flex gap-2"><select id="dy" class="inp !w-auto !rounded-full !py-2 !text-xs font-bold" onchange="dashY(this.value)"></select><button class="btn" onclick="refresh()"><i class="fa-solid fa-arrows-rotate"></i> รีเฟรช</button></div></div>
@@ -99,7 +95,7 @@ details>summary{cursor:pointer;list-style:none}details[open] .ch{transform:rotat
     <div id="dn" class="fh font-semibold text-[var(--p)] mb-2 px-1"></div><div id="dtb" class="card divide-y overflow-hidden"></div>
    </section>
    <section id="v-reports" class="v hidden max-w-7xl mx-auto">
-    <div id="rtabs" class="flex border-b mb-4 overflow-x-auto"></div>
+    <div id="rtabs" class="flex gap-2 mb-4 overflow-x-auto pb-1"></div>
     <div id="rf" class="card p-4 mb-4 flex flex-wrap gap-3 items-end"></div>
     <div id="rbox" class="card overflow-x-auto"><table id="rtb" class="w-full"></table></div><div id="rreg" class="hidden card p-5 overflow-x-auto"></div>
    </section>
@@ -107,12 +103,11 @@ details>summary{cursor:pointer;list-style:none}details[open] .ch{transform:rotat
    <section id="v-courses" class="v hidden max-w-6xl mx-auto"><div id="cw"></div></section>
    <section id="v-enroll" class="v hidden max-w-3xl mx-auto"><div id="ew"></div></section>
    <section id="v-licenses" class="v hidden max-w-6xl mx-auto"><div id="mlc" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div></section>
-  </main>
- <nav id="nav" class="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 bg-white rounded-full shadow-2xl px-3 py-2 flex gap-1 max-w-[96vw]"></nav>
+  </div></main>
 </div>
 
 <!-- QR SCANNER -->
-<div id="sc" class="hidden fixed inset-0 z-50 bg-slate-900/80 p-4 items-center justify-center"><div class="card !bg-white w-full max-w-md p-5 text-center"><b class="fh text-[var(--p)]"><i class="fa-solid fa-qrcode mr-1"></i> สแกน QR ประจำตัวพนักงาน</b><div id="scmode" class="flex gap-1 bg-[#F1F2F6] rounded-full p-1 mt-3"></div><div class="relative mt-3 rounded-2xl overflow-hidden bg-black" style="aspect-ratio:1/1"><video id="scv" playsinline muted class="w-full h-full object-cover"></video><div class="absolute inset-10 border-4 border-white/80 rounded-2xl pointer-events-none"></div></div><div id="scm" class="text-sm mt-3 text-slate-600"></div><button class="btn btn2 mt-4 w-full justify-center" onclick="scanStop()">ปิดกล้อง</button></div></div>
+<div id="sc" class="hidden fixed inset-0 z-50 bg-slate-900/80 p-4 items-center justify-center"><div class="card !bg-white w-full max-w-md p-5 text-center"><b class="fh text-[var(--p)]"><i class="fa-solid fa-qrcode mr-1"></i> สแกน QR ประจำตัวพนักงาน</b><div id="scmode" class="flex gap-1 rounded-full p-1 mt-3" style="background:var(--p)"></div><div class="relative mt-3 rounded-2xl overflow-hidden bg-black" style="aspect-ratio:1/1"><video id="scv" playsinline muted class="w-full h-full object-cover"></video><div class="absolute inset-10 border-4 border-white/80 rounded-2xl pointer-events-none"></div></div><div id="scm" class="text-sm mt-3 text-slate-600"></div><button class="btn btn2 mt-4 w-full justify-center" onclick="scanStop()">ปิดกล้อง</button></div></div>
 <div id="tst" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70] flex flex-col gap-2 items-center pointer-events-none"></div>
 
 <!-- MODAL -->
@@ -179,7 +174,7 @@ function eLogin(){const v=$('pw1').value;if(!v)return $('pw1').focus();eAuth(v,f
 function eSetup(){const a=$('pw2').value;if(a.length<4)return modal('คำแนะนำ','กรุณาตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร');if(a!==$('pw3').value)return modal('ข้อผิดพลาด','รหัสผ่านไม่ตรงกัน','error');eAuth(a,true)}
 function enter(){role='emp';setUser(cur.empId?nm(cur):'พนักงานใหม่',eid,String(cur.firstName||'N').charAt(0));start()}
 function start(){$('login').classList.add('hidden');$('app').classList.remove('hidden');
- $('nav').innerHTML=NAV[role].map(n=>`<button class="nav" data-k="${n[0]}" onclick="go('${n[0]}')"><i class="fa-solid ${n[2]}"></i><span>${n[3]}</span></button>`).join('');
+ $('nav').innerHTML=NAV[role].map(n=>`<button class="nav" data-k="${n[0]}" onclick="go('${n[0]}')"><span class="ic"><i class="fa-solid ${n[2]}"></i></span><span>${n[3]}</span></button>`).join('');
  $$('[data-hr]').forEach(x=>x.classList.toggle('hidden',role!='admin'));try{go(role=='admin'?'dashboard':'profile')}catch(e){showErr(e)}}
 function resetLogin(){
  
@@ -279,7 +274,7 @@ $('f').onsubmit=async ev=>{ev.preventDefault();const b=$('sb'),id=$('empId').val
 
 
 const yrs=()=>{const s=new Set([new Date().getFullYear()]);E.forEach(e=>{[e.startDate,e.resignDate].forEach(d=>d&&!isNaN(new Date(d))&&s.add(new Date(d).getFullYear()));tr(e).forEach(t=>t.date&&!isNaN(new Date(t.date))&&s.add(new Date(t.date).getFullYear()))});return[...s].sort((a,b)=>b-a)};
-const st=(l,v,u='',ic='fa-users',hi)=>`<div class="card p-5 ${hi?'!text-white':''}" ${hi?'style="background:var(--g)"':''}><div class="w-10 h-10 rounded-full flex items-center justify-center mb-3 ${hi?'bg-white/20':'bg-[var(--pc)] text-[var(--p)]'}"><i class="fa-solid ${ic}"></i></div><div class="text-xs font-bold ${hi?'opacity-80':'text-slate-500'}">${l}</div><div class="fh text-3xl font-bold ${hi?'':'text-[var(--p)]'}">${v}<span class="text-sm font-medium ml-1">${u}</span></div></div>`;
+const st=(l,v,u='',ic='fa-users',hi)=>`<div class="card p-5 ${hi?'!text-white':''}" ${hi?'style="background:var(--p)"':''}><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${hi?'bg-white/15':'bg-white text-[var(--p)]'}"><i class="fa-solid ${ic}"></i></div><div class="text-xs font-semibold ${hi?'opacity-80':'text-slate-500'}">${l}</div><div class="fh text-3xl font-bold ${hi?'':'text-[var(--p)]'}">${v}<span class="text-sm font-medium ml-1">${u}</span></div></div>`;
 function dash(){const Y=+DY||new Date().getFullYear();DY=Y;$('dy').innerHTML=yrs().map(y=>`<option ${y==Y?'selected':''}>${y}</option>`).join('');
  const a=E.filter(e=>!isOut(e)),n=t=>a.filter(e=>(e.employeeType||'').includes(t)).length,g=a.filter(e=>e.gender=='Male').length,f=a.filter(e=>e.gender=='Female').length,mp=Math.round(g/((g+f)||1)*100),
  av=x=>x.length?x.reduce((p,c)=>p+c)/x.length:0,ages=a.filter(e=>e.dob).map(e=>age(e.dob)).filter(x=>x>0),tn=a.filter(e=>e.startDate).map(e=>(Date.now()-new Date(e.startDate))/315576e5).filter(x=>x>0),
@@ -289,8 +284,23 @@ function dash(){const Y=+DY||new Date().getFullYear();DY=Y;$('dy').innerHTML=yrs
  const avg=(as+ae)/2,al=[];E.forEach(e=>{if(!isOut(e))lics(e).forEach(l=>{if(l.exp){const d=Math.ceil((new Date(l.exp)-Date.now())/864e5);if(d<=60&&d>=-365)al.push([e,l,d])}})});
  const tp=[['ประจำ',n('Full-time'),'#2A3C76'],['พาร์ทไทม์',n('Part-time'),'#FE696E'],['รายวัน',n('Daily'),'#89A0CF'],['ฟรีแลนซ์',n('Freelance'),'#5BB5A2']],tot=tp.reduce((p,c)=>p+c[1],0);let ac=0;
  const cg=tot?tp.map(t=>{const x=ac/tot*100;ac+=t[1];return`${t[2]} ${x}% ${ac/tot*100}%`}).join(','):'#ECEEF4 0% 100%';
+ const MS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],nowY=new Date().getFullYear(),lastM=Y<nowY?11:Y>nowY?-1:new Date().getMonth(),hm12=Array(12).fill(0),cn12=Array(12).fill(0);
+ E.forEach(e=>tr(e).forEach(t=>{const d=dObj(t.date);if(d&&d.getFullYear()==Y){hm12[d.getMonth()]+=parseFloat(t.hours)||0;cn12[d.getMonth()]++}}));
+ const useH=hm12.some(x=>x>0),bv=useH?hm12:cn12,btot=Math.round(bv.reduce((p,c)=>p+c,0)*10)/10,bmax=Math.max(1,...bv),bpk=bv.indexOf(Math.max(...bv));
+ const bars=`<div class="card p-5"><div class="flex items-center gap-3 mb-4"><span class="w-9 h-9 rounded-xl bg-[#FFE3E4] text-[#FE696E] flex items-center justify-center"><i class="fa-solid fa-clock"></i></span><span class="flex-1 text-sm text-slate-500">${useH?'ชั่วโมงอบรมสะสม':'จำนวนครั้งที่อบรม'} ปี ${Y}</span><b class="fh text-2xl text-[var(--p)]">${btot} <span class="text-sm font-medium">${useH?'ชม.':'ครั้ง'}</span></b></div>
+  <div class="flex items-end gap-1.5 sm:gap-2 h-40">${bv.map((v,i)=>`<div class="flex-1 rounded-t-lg rounded-b" title="${MS[i]} ${Math.round(v*10)/10}" style="height:${Math.max(4,v/bmax*100)}%;background:${v&&i==bpk?'#2A3C76':i==lastM?'#FE696E':'#DDE3F2'}"></div>`).join('')}</div>
+  <div class="flex gap-1.5 sm:gap-2 mt-1">${MS.map((m,i)=>`<span class="flex-1 text-center text-[10px] ${i==bpk&&bv[i]?'text-[var(--p)] font-bold':i==lastM?'text-[#C2353A] font-bold':'text-slate-500'}">${m}</span>`).join('')}</div></div>`;
+ const hc=[];for(let m=0;m<=lastM;m++){const end=new Date(Y,m+1,0,23,59,59);hc.push(E.filter(e=>{const s=dObj(e.startDate),r=isOut(e)&&e.resignDate?dObj(e.resignDate):null;return s&&s<=end&&(!r||r>end)}).length)}
+ let line='<p class="text-sm text-slate-500 py-10 text-center">ยังไม่มีข้อมูลในปีนี้</p>';
+ if(hc.length){const W=600,H=190,mn=Math.min(...hc),mx=Math.max(...hc),rg=Math.max(1,mx-mn),px=i=>hc.length==1?W/2:20+i*(W-40)/(hc.length-1),py=v=>H-24-(v-mn)/rg*(H-100);
+  let d='M'+px(0)+' '+py(hc[0]);for(let i=1;i<hc.length;i++){const x0=px(i-1),x1=px(i),xm=(x0+x1)/2;d+=' C'+xm+' '+py(hc[i-1])+' '+xm+' '+py(hc[i])+' '+x1+' '+py(hc[i])}
+  const tag=(i,col,bg)=>{const x=px(i),y=py(hc[i]),t=MS[i]+' '+hc[i],w=t.length*10+26,tx=Math.min(Math.max(x-w/2,0),W-w);return`<line x1="${x}" y1="${y}" x2="${x}" y2="${y-32}" stroke="#C9CEDD" stroke-dasharray="4 4"></line><rect x="${tx}" y="${y-66}" width="${w}" height="34" rx="11" fill="${bg}"></rect><text x="${tx+w/2}" y="${y-43}" text-anchor="middle" font-size="18" font-weight="600" fill="${col}" font-family="Prompt,Sarabun,sans-serif">${t}</text><circle cx="${x}" cy="${y}" r="7" fill="${col}" stroke="#fff" stroke-width="3"></circle>`};
+  line=`<svg viewBox="0 0 ${W} ${H}" class="w-full h-44" role="img" aria-label="จำนวนพนักงานสิ้นเดือน ปี ${Y}"><path d="${d} L${px(hc.length-1)} ${H} L${px(0)} ${H} Z" fill="#DDE3F2" opacity=".5"></path><path d="${d}" fill="none" stroke="#2A3C76" stroke-width="3" stroke-linecap="round"></path>${hc.length>1?tag(0,'#2A3C76','#DDE3F2'):''}${tag(hc.length-1,'#C2353A','#FFE3E4')}</svg>`}
+ const trend=`<div class="card p-5"><div class="flex items-center gap-3 mb-2"><span class="w-9 h-9 rounded-xl bg-[var(--pc)] text-[var(--p)] flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></span><span class="flex-1 text-sm text-slate-500">แนวโน้มกำลังคน (สิ้นเดือน) ปี ${Y}</span></div>${line}
+  <div class="flex items-center gap-4 mt-2"><div class="flex-1"><div class="text-xs text-slate-500">อัตราการลาออก</div><b class="fh text-2xl text-[var(--p)]">${avg?(rs/avg*100).toFixed(1):'0.0'}%</b></div><div class="w-12 h-0.5 bg-[#C9CEDD]"></div><div class="flex-1 text-right"><div class="text-xs text-slate-500">ครอบคลุมการอบรม</div><b class="fh text-2xl text-[var(--p)]">${ae?(P.size/ae*100).toFixed(1):'0.0'}%</b></div></div></div>`;
  const grid=x=>`<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">${x}</div>`;
  $('dc').innerHTML=`<div class="grid lg:grid-cols-3 gap-4"><div class="card p-5 lg:col-span-2"><b class="fh block mb-4 text-[var(--p)]">สัดส่วนพนักงานตามประเภทการจ้าง</b><div class="flex items-center gap-8 flex-wrap justify-center sm:justify-start"><div class="relative w-40 h-40 rounded-full shrink-0" style="background:conic-gradient(${cg})"><div class="absolute inset-[22px] rounded-full bg-white flex flex-col items-center justify-center"><b class="text-2xl text-[var(--p)]">${a.length}</b><span class="text-[10px] text-slate-500">คน</span></div></div><ul class="space-y-2 text-sm flex-1 min-w-[160px]">${tp.map(t=>`<li class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:${t[2]}"></span><span class="flex-1 text-slate-600">${t[0]}</span><b>${t[1]}</b></li>`).join('')}</ul></div></div>${st('พนักงานทั้งหมด',a.length,'คน','fa-users',1)}</div>
+ <div class="grid lg:grid-cols-2 gap-4">${bars}${trend}</div>
  <div class="grid sm:grid-cols-3 gap-4"><div class="card p-5"><div class="fh font-semibold text-[var(--p)] mb-3"><i class="fa-solid fa-venus-mars mr-1"></i> สัดส่วนเพศ</div><div class="flex items-center gap-4"><div class="relative w-24 h-24 rounded-full shrink-0" style="background:conic-gradient(${g+f?`#2A3C76 0% ${mp}%,#FE696E ${mp}% 100%`:'#ECEEF4 0% 100%'})"><div class="absolute inset-3 rounded-full bg-white flex items-center justify-center fh font-bold text-[var(--p)]">${g+f}</div></div><ul class="text-sm space-y-2 flex-1"><li class="flex items-center gap-2"><i class="fa-solid fa-mars text-[#2A3C76]"></i><span class="flex-1">ชาย</span><b>${g}</b></li><li class="flex items-center gap-2"><i class="fa-solid fa-venus text-[#FE696E]"></i><span class="flex-1">หญิง</span><b>${f}</b></li></ul></div></div>${st('อายุเฉลี่ย',Math.round(av(ages)),'ปี','fa-cake-candles')+st('อายุงานเฉลี่ย',av(tn).toFixed(1),'ปี','fa-briefcase')}</div>
  <div class="grid lg:grid-cols-2 gap-4"><div class="card p-5"><b class="fh block mb-3"><i class="fa-solid fa-chalkboard-user text-[var(--p)]"></i> การพัฒนาบุคลากร ปี ${Y}</b>${grid(st('หลักสูตร',C.size,'เรื่อง','fa-book')+st('ผู้ผ่านการอบรม',P.size,'คน','fa-user-graduate')+st('ครอบคลุมแผนก',DP.size,'แผนก','fa-building')+st('สัดส่วนครอบคลุม',ae?(P.size/ae*100).toFixed(2):'0.00','%','fa-percent'))}</div>
  <div class="card p-5"><b class="fh block mb-3"><i class="fa-solid fa-person-walking-arrow-right text-[#FE696E]"></i> การเข้าออก (Turnover) ปี ${Y}</b>${grid(st('เข้าใหม่',nw,'คน','fa-user-plus')+st('ลาออก',rs,'คน','fa-user-minus')+st('เฉลี่ยทั้งปี',avg%1?avg.toFixed(1):avg,'คน','fa-users')+st('อัตราการลาออก',avg?(rs/avg*100).toFixed(2):'0.00','%','fa-arrow-trend-down'))}</div></div>
@@ -402,23 +412,23 @@ function cDetail(id){const c=TC.find(x=>x.id==id);if(!c)return cBack();
   <div class="flex flex-wrap gap-2 mt-5"><button class="btn btn2 !py-2" onclick="cForm('${esc(c.id)}')"><i class="fa-solid fa-pen"></i> แก้ไข</button><button class="btn btn2 !py-2" onclick="cPrintList()"><i class="fa-solid fa-print"></i> พิมพ์ใบลงชื่อ</button><button class="btn btn2 !py-2" onclick="cPrintTime()"><i class="fa-solid fa-clock"></i> รายงานเวลาเข้า-ออก</button><button class="btn btn2 !py-2" onclick="cXlsTime()"><i class="fa-solid fa-file-excel"></i> Excel เวลาเข้า-ออก</button><button class="btn btn2 !py-2" onclick="cDel()"><i class="fa-solid fa-trash text-[#FE696E]"></i> ลบหลักสูตร</button></div></div>
  <div class="card p-6 text-center"><b class="fh text-[var(--p)]">QR เช็คอินหลักสูตร</b><p class="text-xs text-slate-500 mb-3">พนักงานสแกนด้วยกล้องมือถือ แล้วกรอกรหัสพนักงาน</p><div id="cqr" class="inline-block p-3 bg-white rounded-2xl border border-[#ECEEF4]"></div>
   <div class="flex gap-2 justify-center mt-3"><button class="btn btn2 !py-2 !text-xs" onclick="cPrintQr()"><i class="fa-solid fa-print"></i> พิมพ์ QR</button><button class="btn btn2 !py-2 !text-xs" onclick="cCopy()"><i class="fa-solid fa-link"></i> ลิงก์เช็คอิน</button></div></div></div>
- <div class="card p-5 mt-4"><div class="flex flex-wrap items-center justify-between gap-3 mb-3"><b class="fh text-[var(--p)]"><i class="fa-solid fa-qrcode mr-1"></i> จุดเช็คอิน / ลงทะเบียน</b><label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer"><input type="checkbox" id="cwalk" ${CW?'checked':''} onchange="setCW(this.checked)" class="w-4 h-4"> รับคนที่ยังไม่ลงทะเบียน (ลงชื่อหน้างานให้อัตโนมัติ)</label></div>
-  <div class="text-xs font-bold text-slate-500 mb-1">1. เลือกรายการที่จะบันทึก</div><div id="cmode" class="flex gap-1 bg-[#F1F2F6] rounded-full p-1 mb-3 w-full sm:w-fit">${modeBar()}</div>
-  <div class="text-xs font-bold text-slate-500 mb-1">2. พิมพ์รหัส หรือสแกน QR ประจำตัวพนักงาน</div><div class="flex flex-wrap gap-2">
-  <div class="relative flex-1 min-w-[200px]"><i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-[#89A0CF] text-sm"></i><input id="cid" placeholder="พิมพ์รหัส หรือยิงเครื่องสแกน QR (บันทึกอัตโนมัติ)" autocomplete="off" class="inp !pl-11 font-mono uppercase" oninput="cAuto()" onkeydown="if(event.key=='Enter'){event.preventDefault();cAct(CM)}"><div id="chint" class="text-xs mt-1 min-h-[1rem] pl-1"></div></div>
-  <button id="cgo" class="btn" onclick="cAct(CM)"></button><button class="btn btn2" onclick="scanStart()"><i class="fa-solid fa-camera"></i> สแกนด้วยกล้อง</button></div>
-  <p class="text-xs text-slate-500 mt-1">เมื่อรหัสตรงกับพนักงานในระบบ จะบันทึกตามรายการที่เลือกให้ทันทีโดยไม่ต้องกดปุ่ม</p></div>
+ <div class="mt-4 rounded-[26px] overflow-hidden" style="background:var(--p)"><div class="p-5 text-white"><div class="flex flex-wrap items-center gap-3 mb-4"><span class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center"><i class="fa-solid fa-fingerprint"></i></span><b class="fh text-lg flex-1">จุดเช็คอิน / ลงทะเบียน</b><span class="text-sm text-[#D5DBEF]">รับลงชื่อหน้างาน</span><label class="sw" title="รับคนที่ยังไม่ลงทะเบียน (ลงชื่อหน้างานให้อัตโนมัติ)"><input type="checkbox" id="cwalk" ${CW?'checked':''} onchange="setCW(this.checked)" aria-label="รับคนที่ยังไม่ลงทะเบียน"><span></span></label></div>
+  <div class="text-xs text-[#D5DBEF] mb-1.5">1. เลือกรายการที่จะบันทึก</div><div id="cmode" class="flex gap-1 bg-white/10 rounded-full p-1 w-full sm:w-fit">${modeBar()}</div></div>
+  <div class="bg-[#F7F8FB] rounded-t-[26px] p-5"><div class="text-xs font-semibold text-slate-500 mb-1.5">2. พิมพ์รหัส หรือสแกน QR ประจำตัวพนักงาน</div><div class="flex flex-wrap gap-2">
+  <div class="relative flex-1 min-w-[200px]"><i class="fa-solid fa-id-card absolute left-4 top-[26px] -translate-y-1/2 text-[#89A0CF] text-sm"></i><input id="cid" placeholder="พิมพ์รหัส หรือยิงเครื่องสแกน QR (บันทึกอัตโนมัติ)" autocomplete="off" class="inp !pl-11 !h-[52px] font-mono uppercase" oninput="cAuto()" onkeydown="if(event.key=='Enter'){event.preventDefault();cAct(CM)}"><div id="chint" class="text-xs mt-1 min-h-[1rem] pl-1"></div></div>
+  <button id="cgo" class="btn !h-[52px]" onclick="cAct(CM)"></button><button class="btn btn-c !h-[52px]" onclick="scanStart()"><i class="fa-solid fa-camera"></i> สแกนด้วยกล้อง</button></div>
+  <p class="text-xs text-slate-500 mt-1">เมื่อรหัสตรงกับพนักงานในระบบ จะบันทึกตามรายการที่เลือกให้ทันทีโดยไม่ต้องกดปุ่ม</p></div></div>
  <div id="cat" class="card mt-4 overflow-hidden"></div>`;cAtt();qr($('cqr'),ckUrl(c.id),170)}
 function cAtt(){const a=cAt(CS).sort((x,y)=>x.regAt>y.regAt?1:-1),n=a.length,i=a.filter(x=>x.checkIn).length,o=a.filter(x=>x.checkOut).length,p=a.filter(x=>x.postedAt).length,pend=a.filter(x=>x.checkIn&&!x.postedAt).length,
  b=(t,c)=>`<button class="btn btn2 !py-1 !px-3 !text-xs" onclick="${c}">${t}</button>`;
- cGoBtn();$('cat').innerHTML=`<div class="p-4 flex flex-wrap items-center gap-4 justify-between border-b border-[#ECEEF4]"><div class="flex gap-5 text-sm">${[['ลงทะเบียน',n],['เช็คอิน',i],['เช็คเอาท์',o],['เข้าแฟ้มแล้ว',p]].map(x=>`<div><b class="fh text-xl text-[var(--p)]">${x[1]}</b> <span class="text-slate-500">${x[0]}</span></div>`).join('')}</div>
+ cGoBtn();const pc=n?Math.round(i/n*100):0;$('cat').innerHTML=`<div class="p-4 flex flex-wrap items-center gap-4 justify-between border-b border-[#ECEEF4]"><div class="flex items-center gap-5 text-sm flex-wrap"><div class="relative w-16 h-16 rounded-full shrink-0" style="background:conic-gradient(#FE696E 0%,#2A3C76 ${pc}%,#E3E6EF ${pc}% 100%)" title="เช็คอินแล้ว ${pc}%"><div class="absolute inset-[7px] rounded-full bg-white flex items-center justify-center fh font-bold text-sm text-[var(--p)]">${pc}%</div></div>${[['ลงทะเบียน',n],['เช็คอิน',i],['เช็คเอาท์',o],['เข้าแฟ้มแล้ว',p]].map(x=>`<div><b class="fh text-xl text-[var(--p)]">${x[1]}</b> <span class="text-slate-500">${x[0]}</span></div>`).join('')}</div>
  <button class="btn btn-c" onclick="cPost()" ${pend?'':'disabled'}><i class="fa-solid fa-folder-plus"></i> ส่งเข้าแฟ้มประวัติ (${pend})</button></div><div class="overflow-x-auto"><table class="w-full"><thead><tr><th>ลำดับ</th><th>รหัส</th><th>ชื่อ-นามสกุล</th><th>แผนก</th><th>ลงทะเบียนโดย</th><th>เวลาเข้า</th><th>เวลาออก</th><th>แฟ้มประวัติ</th><th></th></tr></thead><tbody>
  ${n?a.map((x,k)=>`<tr><td>${k+1}</td><td class="font-mono">${esc(x.empId)}</td><td>${esc(x.name)}</td><td>${esc(x.dept||'-')}</td><td>${esc(x.regBy)}</td><td title="${esc(x.checkIn)}">${x.checkIn?'<b class="text-green-700">'+hm(x.checkIn)+'</b>':'-'}</td><td title="${esc(x.checkOut)}">${x.checkOut?'<b class="text-[var(--p)]">'+hm(x.checkOut)+'</b>':'-'}</td><td>${x.postedAt?'<span class="chip bg-green-100 text-green-800">ส่งแล้ว</span>':'-'}</td>
   <td class="space-x-1">${x.postedAt?'':!x.checkIn?b('เข้า',`cAct('in','${esc(x.empId)}')`)+b('<i class="fa-solid fa-xmark text-[#FE696E]"></i>',`cUnreg('${esc(x.empId)}')`):!x.checkOut?b('ออก',`cAct('out','${esc(x.empId)}')`):''}</td></tr>`).join(''):'<tr><td colspan="9" class="text-center py-10 text-slate-500">ยังไม่มีผู้ลงทะเบียน</td></tr>'}</tbody></table></div>`}
 async function cRefresh(){try{await loadTr()}catch(e){}if(cv=='courses'&&CS&&$('cat'))cAtt()}
 let CM='in',CW=false;try{CM=localStorage.getItem('hr-cm')||'in';CW=localStorage.getItem('hr-cw')=='1'}catch(e){}
 const CMS={in:['เช็คอิน','fa-right-to-bracket','#2E7D32'],out:['เช็คเอาท์','fa-right-from-bracket','#2A3C76'],register:['ลงทะเบียน','fa-user-plus','#FE696E']};
-const modeBar=()=>Object.keys(CMS).map(k=>`<button type="button" class="fh flex-1 sm:flex-none px-4 py-2 rounded-full text-sm font-semibold transition ${CM==k?'text-white shadow':'text-slate-500'}" style="${CM==k?'background:'+CMS[k][2]:''}" onclick="setCM('${k}')"><i class="fa-solid ${CMS[k][1]} mr-1"></i>${CMS[k][0]}</button>`).join('');
+const modeBar=()=>Object.keys(CMS).map(k=>`<button type="button" class="fh flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-full text-[13px] sm:text-sm font-semibold whitespace-nowrap transition ${CM==k?'bg-white shadow':'text-[#D5DBEF]'}" style="${CM==k?'color:'+CMS[k][2]:''}" onclick="setCM('${k}')"><i class="fa-solid ${CMS[k][1]} mr-1"></i>${CMS[k][0]}</button>`).join('');
 function cGoBtn(){const b=$('cgo'),i=$('cid'),c=CMS[CM];if(b){b.innerHTML=`<i class="fa-solid ${c[1]}"></i> บันทึก${c[0]}`;b.style.background=c[2]}if(i)i.style.borderColor=c[2]}
 function setCM(m){CM=m;try{localStorage.setItem('hr-cm',m)}catch(e){}['cmode','scmode'].forEach(x=>{if($(x))$(x).innerHTML=modeBar()});cGoBtn();const i=$('cid');if(i&&$('sc').classList.contains('hidden'))i.focus();if(scS)$('scm').textContent='โหมด: '+CMS[m][0]+' เล็ง QR ให้อยู่ในกรอบ'}
 function setCW(v){CW=!!v;try{localStorage.setItem('hr-cw',v?'1':'0')}catch(e){}}
@@ -492,16 +502,22 @@ async function scanStart(){$('sc').classList.remove('hidden');$('scmode').innerH
 
 
 async function enr(){$('ew').innerHTML=LOADING;try{await loadTr()}catch(e){$('ew').innerHTML='<div class="card p-10 text-center text-[#D63D43]">'+esc(e.message)+'</div>';return}enrRender()}
+let EF='all';function enrF(f){EF=f;enrRender()}
 function enrRender(){const me=my(),td=today(),mine=c=>TA.find(a=>a.courseId==c.id&&a.empId==eid),
- l=TC.filter(c=>(c.status!='closed'&&(c.endDate||c.date)>=td)||(mine(c)&&!mine(c).postedAt)).sort((a,b)=>a.date>b.date?1:-1);
- $('ew').innerHTML=`<div class="card p-5 mb-4 flex items-center gap-5 flex-wrap"><div id="myqr" class="p-2 bg-white rounded-xl border border-[#ECEEF4]"></div><div class="flex-1 min-w-[180px]"><b class="fh text-[var(--p)] block"><i class="fa-solid fa-qrcode mr-1"></i> QR ประจำตัวของฉัน</b><div class="font-mono text-lg mt-1">${esc(eid)}</div><p class="text-xs text-slate-500 mt-1">แสดง QR นี้ให้เจ้าหน้าที่สแกนที่หน้าห้องอบรม เพื่อลงเวลาเข้าและออก</p></div></div>
- ${me.row?'':'<div class="card p-4 mb-4 bg-amber-50 text-amber-900 text-sm"><i class="fa-solid fa-circle-info mr-1"></i>กรุณาบันทึกแฟ้มประวัติส่วนตัวก่อน จึงจะลงทะเบียนอบรมได้</div>'}
- <div class="fh font-semibold text-[var(--p)] mb-2 px-1">หลักสูตรที่เปิดรับ ${l.length} หลักสูตร</div><div class="space-y-3">${l.length?l.map(c=>{const m=mine(c),n=TN[c.id]||0,cap=+c.capacity||0,full=cap&&n>=cap,isToday=cOn(c),
-  st=!m?'':m.postedAt?'<span class="chip bg-green-100 text-green-800">บันทึกเข้าแฟ้มแล้ว</span>':m.checkOut?`<span class="chip bg-[var(--pc)] text-[var(--p)]">เช็คเอาท์ ${hm(m.checkOut)} น.</span>`:m.checkIn?`<span class="chip bg-green-100 text-green-800">เช็คอิน ${hm(m.checkIn)} น.</span>`:'<span class="chip bg-[var(--pc)] text-[var(--p)]">ลงทะเบียนแล้ว</span>',
-  btn=(t,a,k)=>`<button class="btn ${k||''} !py-2" data-c="${esc(c.id)}" onclick="enrAct(this.dataset.c,'${a}')">${t}</button>`,
-  acts=(!m&&c.status!='closed'?(full?'<span class="text-xs text-slate-500">ที่นั่งเต็มแล้ว</span>':btn('<i class="fa-solid fa-user-plus"></i> ลงทะเบียน','register')):'')+(m&&!m.checkIn?btn('ยกเลิก','unregister','btn2'):'')+(isToday&&me.row&&c.status!='closed'&&!(m&&m.checkOut)?btn('<i class="fa-solid fa-fingerprint"></i> '+(m&&m.checkIn?'เช็คเอาท์':'เช็คอิน'),'auto','btn-c'):'');
-  return`<div class="card p-4 flex flex-wrap items-center gap-3"><div class="w-11 h-11 rounded-full bg-[var(--pc)] text-[var(--p)] flex items-center justify-center shrink-0"><i class="fa-solid ${c.type=='external'?'fa-plane-departure':'fa-chalkboard-user'}"></i></div>
-  <div class="flex-1 min-w-[200px]"><div class="flex flex-wrap gap-2 mb-1">${tChip(c)}${isToday?'<span class="chip bg-green-100 text-green-800">วันนี้</span>':''}${st}</div><div class="fh font-semibold">${esc(c.title)}</div><div class="text-xs text-slate-500">${cTime(c)}${c.location?' ณ '+esc(c.location):''}${cap?' (เหลือ '+Math.max(cap-n,0)+' ที่)':''}</div></div><div class="flex gap-2 flex-wrap">${me.row?acts:''}</div></div>`}).join(''):'<div class="card p-10 text-center text-slate-500">ยังไม่มีหลักสูตรที่เปิดรับลงทะเบียน</div>'}</div>`;qr($('myqr'),eid,120)}
+ all=TC.filter(c=>(c.status!='closed'&&(c.endDate||c.date)>=td)||(mine(c)&&!mine(c).postedAt)).sort((a,b)=>a.date>b.date?1:-1),
+ l=all.filter(c=>EF=='all'||(EF=='today'?cOn(c):(c.type||'internal')==EF)),
+ chip=(k,t)=>`<button class="tab ${EF==k?'on':''}" style="background:${EF==k?'#2A3C76':'#F1F2F6'}" onclick="enrF('${k}')">${t}</button>`;
+ $('ew').innerHTML=`<div class="card p-5 mb-4 flex items-center gap-5 flex-wrap"><div id="myqr" class="p-2 bg-white rounded-xl"></div><div class="flex-1 min-w-[180px]"><b class="fh text-[var(--p)] block"><i class="fa-solid fa-qrcode mr-1"></i> QR ประจำตัวของฉัน</b><div class="font-mono text-lg mt-1">${esc(eid)}</div><p class="text-xs text-slate-500 mt-1">แสดง QR นี้ให้เจ้าหน้าที่สแกนที่หน้าห้องอบรม เพื่อลงเวลาเข้าและออก</p></div></div>
+ ${me.row?'':'<div class="card p-4 mb-4 !bg-amber-50 text-amber-900 text-sm"><i class="fa-solid fa-circle-info mr-1"></i>กรุณาบันทึกแฟ้มประวัติส่วนตัวก่อน จึงจะลงทะเบียนอบรมได้</div>'}
+ <div class="flex gap-2 overflow-x-auto pb-1 mb-3">${chip('all','ทั้งหมด')+chip('today','วันนี้')+chip('internal','ภายใน')+chip('external','ภายนอก')}</div>
+ <div class="fh font-semibold text-[var(--p)] mb-3 px-1">หลักสูตรที่เปิดรับ ${l.length} หลักสูตร</div><div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">${l.length?l.map(c=>{const m=mine(c),n=TN[c.id]||0,cap=+c.capacity||0,full=cap&&n>=cap,isToday=cOn(c),
+  st=!m?(full?'ที่นั่งเต็มแล้ว':'ยังไม่ลงทะเบียน'):m.postedAt?'บันทึกเข้าแฟ้มแล้ว':m.checkOut?'เช็คเอาท์ '+hm(m.checkOut)+' น.':m.checkIn?'เช็คอิน '+hm(m.checkIn)+' น.':'ลงทะเบียนแล้ว',
+  canT=me.row&&c.status!='closed'&&!(m&&m.checkIn)&&!(!m&&full),
+  tg=`<button class="tgl" aria-pressed="${m?'true':'false'}" aria-label="ลงทะเบียน ${esc(c.title)}" data-c="${esc(c.id)}" onclick="enrAct(this.dataset.c,'${m?'unregister':'register'}')" ${canT?'':'disabled'}></button>`,
+  ck=isToday&&me.row&&c.status!='closed'&&!(m&&m.checkOut)?`<button class="btn btn-c !py-2 !px-3 !text-xs w-full justify-center mt-1" data-c="${esc(c.id)}" onclick="enrAct(this.dataset.c,'auto')"><i class="fa-solid fa-fingerprint"></i> ${m&&m.checkIn?'เช็คเอาท์':'เช็คอิน'}</button>`:'';
+  return`<div class="card p-4 flex flex-col items-center text-center gap-2"><div class="w-12 h-12 rounded-2xl bg-white text-[var(--p)] flex items-center justify-center text-xl"><i class="fa-solid ${c.type=='external'?'fa-plane-departure':'fa-chalkboard-user'}"></i></div>
+  <div class="flex flex-wrap justify-center gap-1">${tChip(c)}${isToday?'<span class="chip bg-green-100 text-green-800">วันนี้</span>':''}</div><div class="fh font-semibold text-sm leading-snug">${esc(c.title)}</div><div class="text-xs text-slate-500">${cTime(c)}${c.location?'<br>'+esc(c.location):''}${cap?'<br>เหลือ '+Math.max(cap-n,0)+' ที่':''}</div>
+  <div class="flex items-center justify-between w-full mt-auto pt-2 gap-2"><span class="text-xs font-semibold text-left ${m?'text-[var(--p)]':'text-slate-500'}">${st}</span>${tg}</div>${ck}</div>`}).join(''):'<div class="card p-10 text-center text-slate-500 col-span-full">ยังไม่มีหลักสูตรในหมวดนี้</div>'}</div>`;qr($('myqr'),eid,120)}
 async function enrAct(cid,a){const go2=async()=>{try{const r=await trApi({action:a,courseId:cid,empId:eid});toast(a=='unregister'?'ยกเลิกการลงทะเบียนแล้ว':ckMsg(r),'ok')}catch(e){toast(esc(e.message),'err')}try{await loadTr()}catch(e){}enrRender()};
  a=='unregister'?confirmM('ยกเลิกการลงทะเบียน','<p class="text-center">ยกเลิกการลงทะเบียนหลักสูตรนี้?</p>','ยกเลิกการลงทะเบียน',go2):go2()}
 
