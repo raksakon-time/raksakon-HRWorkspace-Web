@@ -31,6 +31,7 @@ body{font-family:Sarabun,sans-serif;color:#1E2440;background:#F1F2F6}
 .nav i{font-size:1.15rem}.nav:hover .ic{background:var(--pc)}.nav.on{color:var(--p);font-weight:700}.nav.on .ic{background:var(--p);color:#fff;box-shadow:0 8px 18px rgba(42,60,118,.3)}
 .tab{padding:.55rem 1.1rem;font-weight:500;border-radius:999px;color:var(--p);white-space:nowrap;background:transparent;border:0;font-size:.85rem}#rtabs .tab{background:#F1F2F6}
 #egb .grid>*,#pw .grid>*{min-width:0}
+.cgrid{display:grid;gap:1rem;align-items:start}.cgrid>*{min-width:0}@media(min-width:1024px){.cgrid{grid-template-columns:minmax(0,430px) minmax(0,1fr)}}
 .tab.on,#rtabs .tab.on{background:var(--p);color:#fff;font-weight:600}
 table{border-collapse:collapse}th,td{padding:.6rem .8rem;font-size:.8rem;text-align:left;white-space:nowrap}
 th{background:#EEF0F6;color:var(--ov);font-weight:600}
@@ -100,7 +101,7 @@ details>summary{cursor:pointer;list-style:none}details[open] .ch{transform:rotat
    <section id="v-reports" class="v hidden max-w-7xl mx-auto">
     <div id="rtabs" class="flex gap-2 mb-4 overflow-x-auto pb-1"></div>
     <div id="rf" class="card p-4 mb-4 flex flex-wrap gap-3 items-end"></div>
-    <div id="rbox" class="card overflow-x-auto"><table id="rtb" class="w-full"></table></div><div id="rreg" class="hidden card p-5 overflow-x-auto"></div>
+    <div id="rbox" class="card overflow-x-auto"><table id="rtb" class="w-full"></table></div><div id="rreg" class="hidden card p-5 overflow-x-auto"></div><div id="rcert" class="hidden"></div>
    </section>
    <section id="v-training" class="v hidden max-w-3xl mx-auto"><div id="mtb" class="space-y-3"></div></section>
    <section id="v-courses" class="v hidden max-w-6xl mx-auto"><div id="cw"></div></section>
@@ -338,7 +339,8 @@ birthday:['วันเกิด',()=>S('rm','เดือนเกิด',MO),[
  ()=>E.filter(e=>!isOut(e)&&e.dob&&(!V('rm')||new Date(e.dob).getMonth()+1==V('rm'))).sort((a,b)=>{a=new Date(a.dob);b=new Date(b.dob);return a.getMonth()-b.getMonth()||a.getDate()-b.getDate()}).map(e=>[esc(e.empId),N(e),pd(e),D(e.dob),age(e.dob)])]};
 const reg=()=>flt(V('rq'),V('rd'),V('rs'));
 const tbl=(h,r)=>`<thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
-function rep(k){cr=k;$('rtabs').innerHTML=Object.keys(RP).map((x,i)=>`<button class="tab ${x==k?'on':''}" onclick="rep('${x}')"><i class="fa-solid ${RI[x]} mr-1.5"></i>${RP[x][0]}</button>`).join('');
+function rep(k){$('rtabs').innerHTML=Object.keys(RP).concat('cert').map(x=>`<button class="tab ${x==k?'on':''}" onclick="rep('${x}')"><i class="fa-solid ${x=='cert'?'fa-file-signature':RI[x]} mr-1.5"></i>${x=='cert'?'หนังสือรับรองเงินเดือน':RP[x][0]}</button>`).join('');
+ const ce=k=='cert';$('rf').classList.toggle('hidden',ce);$('rcert').classList.toggle('hidden',!ce);if(ce){$('rbox').classList.add('hidden');$('rreg').classList.add('hidden');certInit();return}cr=k;
  const rg=k=='registry';$('rf').innerHTML=RP[k][1]()+`<div class="flex gap-2 flex-wrap"><button class="btn" onclick="run()"><i class="fa-solid fa-filter"></i> กรองข้อมูล</button>${rg?'<button class="btn btn-c" onclick="printReg()"><i class="fa-solid fa-print"></i> พิมพ์ทะเบียนลูกจ้าง</button><button class="btn btn2" onclick="xlsReg()"><i class="fa-solid fa-file-excel"></i> ส่งออก Excel</button><button class="btn btn2" onclick="printAll()"><i class="fa-solid fa-address-card"></i> พิมพ์แฟ้มประวัติ</button>':'<button class="btn btn2" onclick="printRep()" title="พิมพ์ / PDF"><i class="fa-solid fa-print"></i></button><button class="btn btn2" onclick="xlsRep()" title="Excel"><i class="fa-solid fa-file-excel"></i></button>'}</div>`;
  if(k=='leave')$('ry').value=new Date().getFullYear();$$('#rf input,#rf select').forEach(x=>x.addEventListener(x.tagName=='INPUT'?'input':'change',run));run()}
 function run(){try{const R=RP[cr],r=R[3](),rg=cr=='registry';RD=[['ลำดับ',...R[2]],r.map((x,i)=>[i+1,...x])];$('rbox').classList.toggle('hidden',rg);$('rreg').classList.toggle('hidden',!rg);if(rg)$('rreg').innerHTML=r.length?regForm():'<p class="text-center py-10 text-slate-500">ไม่พบข้อมูลตามเงื่อนไขที่ระบุ</p>';$('rtb').innerHTML=r.length?tbl(...RD):'<tbody><tr><td class="text-center py-10 text-slate-500">ไม่พบข้อมูลตามเงื่อนไขที่ระบุ</td></tr></tbody>'}catch(e){console.error(e);RD=null;$('rtb').innerHTML='<tbody><tr><td class="text-[#FE696E]">เกิดข้อผิดพลาดในการแสดงผล</td></tr></tbody>'}}
@@ -346,7 +348,7 @@ const noData=()=>!RD||!RD[1].length&&(modal('แจ้งเตือน','ไ�
 function printRep(){if(noData())return;printHtml(`<h2 style="text-align:center;font-weight:bold;margin-bottom:8px">${RP[cr][0]}</h2><table class="rt" border="1">${tbl(...RD)}</table>`,1)}
 function xlsRep(){if(noData())return;xls('<table border="1">'+tbl(...RD).replace(/<(?!\/?(?:thead|tbody|tr|th|td)\b)[^>]*>/g,'')+'</table>',RP[cr][0]+'.xls')}
 function xls(h,name){const t='<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body>'+h+'</body></html>',a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'application/vnd.ms-excel'}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
-function printHtml(h,land){$('pa').innerHTML=h;const s=document.createElement('style');s.textContent=`@page{size:${land?'landscape':'portrait'};margin:12mm}`;document.head.appendChild(s);window.print();s.remove();$('pa').innerHTML=''}
+function printHtml(h,land){$('pa').innerHTML=h;const s=document.createElement('style');s.textContent=`@page{size:${typeof land=='string'?land:land?'landscape':'portrait'};margin:12mm}`;document.head.appendChild(s);window.print();s.remove();$('pa').innerHTML=''}
 function regForm(){const money=v=>v===''||v==null||isNaN(+v)?esc(v||''):(+v).toLocaleString('th-TH'),
  rows=reg().map((e,i)=>{const sl=J(e.salaryHistory),s=sl.length?sl[sl.length-1].amount:'',t=e.employeeType||'',col=t=='Daily'?0:t=='Part-time'?2:1,w=['','',''];if(s!=='')w[col]=money(s);
   return`<tr><td class="c">${i+1}</td><td>${N(e)}</td><td class="c" style="mso-number-format:'\\@'">${esc(e.nationalId||'-')}</td><td class="c">${e.gender=='Male'?'ชาย':e.gender=='Female'?'หญิง':'-'}</td><td class="c">${esc(e.nationality||'ไทย')}</td><td class="c">${D(e.dob)||'-'}</td><td class="c">${e.dob?age(e.dob):'-'}</td><td>${esc(e.address||'-')}</td><td class="c">${D(e.startDate)||'-'}</td><td>${esc(e.position||'-')}</td><td class="r">${w[0]}</td><td class="r">${w[1]}</td><td class="r">${w[2]}</td><td></td><td class="c">${isOut(e)?D(e.resignDate)||'ลาออกแล้ว':''}</td></tr>`}).join('');
@@ -694,6 +696,92 @@ function egPrint(){const r=SVR;if(!r||r.suppressed)return;
  printHtml(css+`<div class="ex">${SVDM?'<div style="border:2px solid #C2353A;color:#C2353A;padding:4px 8px;margin-bottom:6px;font-weight:bold;text-align:center">ข้อมูลตัวอย่าง ไม่ใช่ผลสำรวจจริง</div>':''}<table style="margin-bottom:4px"><tr><td style="width:28%;vertical-align:middle"><img src="https:\/\/i.postimg.cc\/pXHW7T4D\/Squre-profile-pink-bg.jpg" style="height:36px;width:36px;object-fit:cover;border-radius:8px;vertical-align:middle"> <b style="font-size:14px;vertical-align:middle">รักษ์สกล</b></td><td style="text-align:center"><div style="font-size:16px;font-weight:bold;font-family:Prompt,Sarabun,sans-serif">รายงานผลสำรวจความผูกพันของพนักงาน</div><div>สรุปสำหรับผู้บริหาร · ${esc(r.survey.title)}</div></td><td style="width:28%;text-align:right;font-size:10.5px;vertical-align:top">${r.survey.closeDate?'ปิดรับ '+D(r.survey.closeDate)+'<br>':''}พิมพ์เมื่อ ${D(new Date())}${fl?'<br>เฉพาะ '+esc(fl):''}</td></tr></table>
  ${kp}<h2>1. ประเด็นสำคัญ</h2><ul>${hi.map(x=>'<li>'+x+'</li>').join('')}</ul><h2>2. คะแนนรายมิติ</h2>${dimT}${prT}<h2>${sec('ผลรายกลุ่มงาน (Heatmap)')}</h2>${hmT}${k?'<h2>'+sec('ความเสี่ยงลาออก')+'</h2><div style="margin-bottom:3px;font-size:11px">ประเมินจากข้อ "'+esc(k.q.text)+'"</div>'+rkT:''}${cmT?'<h2>'+sec('ความคิดเห็นจากพนักงาน')+'</h2>'+cmT:''}
  <div style="margin-top:12px;font-size:10px;color:#555;border-top:1px solid #ccc;padding-top:4px">วิธีคำนวณ: % เห็นด้วย = สัดส่วนผู้ตอบ 4–5 จากสเกล 5 ระดับ · ดัชนีความผูกพัน = % เห็นด้วยเฉลี่ยของข้อวัดความผูกพัน · eNPS = % ให้ 9–10 ลบ % ให้ 0–6 · r = สหสัมพันธ์ระหว่างคะแนนมิติกับคะแนนความผูกพันรายบุคคล · กลุ่มที่ตอบน้อยกว่า ${r.survey.minGroup} คนไม่แสดงผลเพื่อรักษาความลับ · ผู้ตอบ ${r.n} คน</div></div>`)}
+
+
+let CERT=null,CE=null,CTF={},COI=[],CHQ='';
+const cTD=s=>{const d=dObj(s);return d?d.getDate()+' '+TH[d.getMonth()]+' '+(d.getFullYear()+543):''};
+const cB=n=>(+n||0).toLocaleString('th-TH',{minimumFractionDigits:(+n%1)?2:0,maximumFractionDigits:2});
+function bahtText(x){x=Math.round((+x||0)*100)/100;const N=['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'],P=['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+ const g=n=>{let s='';const t=String(n),l=t.length;for(let i=0;i<l;i++){const d=+t[i],p=l-i-1;if(!d)continue;if(p==1&&d==1)s+='สิบ';else if(p==1&&d==2)s+='ยี่สิบ';else if(p==0&&d==1&&l>1)s+='เอ็ด';else s+=N[d]+P[p]}return s};
+ const w=n=>n<1000000?g(n):w(Math.floor(n/1000000))+'ล้าน'+(n%1000000==1?'เอ็ด':g(n%1000000));
+ const i=Math.floor(x),st=Math.round((x-i)*100);return (i?w(i)+'บาท':'')+(st?w(st)+'สตางค์':(i?'ถ้วน':'ศูนย์บาทถ้วน'))}
+function cLastSal(e){const h=J(e.salaryHistory).map(x=>({date:String(x&&x.date||''),amt:+String(x&&x.amount!=null?x.amount:'').replace(/[, ]/g,'')})).filter(x=>x.amt>0).sort((a,b)=>a.date.localeCompare(b.date));return h.length?h[h.length-1]:null}
+function cTen(s){const a=dObj(s);if(!a)return'-';const b=new Date();let m=(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth();if(b.getDate()<a.getDate())m--;m=Math.max(0,m);return Math.floor(m/12)+' ปี '+(m%12)+' เดือน'}
+
+async function certInit(){const w=$('rcert');if(!w)return;w.innerHTML=LOAD2;
+ try{CERT=await srv('apiCertList',TOKEN)}catch(e){w.innerHTML=errCard(e);return}
+ if(!CERT||!CERT.set){w.innerHTML=errCard(Error('ระบบหลังบ้านยังไม่รองรับหนังสือรับรองเงินเดือน กรุณาอัปเดต Code.gs และ Deploy ใหม่'));return}
+ CE=null;COI=[];CTF={no:CERT.next,date:today(),sal:'',days:30};certDraw()}
+function certDraw(){const w=$('rcert'),S=CERT.set;if(!w)return;
+ const chips=['ค่าวิชาชีพ','ค่าตำแหน่ง','ค่าเวร (เฉลี่ยต่อเดือน)','ค่าครองชีพ'].map(n=>`<button class="chip bg-white border border-dashed border-[#A7B1C8] text-[var(--p)]" onclick="certAdd('${n}')">+ ${n}</button>`).join('')+'<button class="chip bg-white border border-dashed border-[#A7B1C8] text-[var(--p)]" onclick="certAdd(\'\')">+ รายการอื่น</button>';
+ w.innerHTML=`<div class="cgrid">
+ <div class="space-y-4 min-w-0">
+  <div class="card p-5"><b class="fh text-[var(--p)] block">1. ค้นหาพนักงาน</b><p class="text-xs text-slate-500 mb-3">พิมพ์รหัสพนักงานหรือชื่อ ระบบดึงชื่อ ตำแหน่ง แผนก วันเริ่มงาน และเงินเดือนล่าสุดจากแฟ้มพนักงาน</p>
+   <form class="flex gap-2" onsubmit="certFind();return false"><input id="cq" class="inp flex-1 min-w-0" placeholder="รหัสพนักงาน หรือชื่อ" autocomplete="off" value="${esc(CE?CE.empId:'')}"><button type="submit" class="btn btn-c"><i class="fa-solid fa-magnifying-glass"></i> ค้นหา</button></form><div id="cemp">${certEmp()}</div></div>
+  <div class="card p-5"><b class="fh text-[var(--p)] block">2. ข้อมูลหนังสือ</b><p class="text-xs text-slate-500 mb-3">ระบบเสนอเลขที่ถัดไปให้ แก้ได้ เงินเดือนแก้ได้ถ้าต้องการ</p>
+   <div class="grid grid-cols-2 gap-3"><label><span class="lbl">เลขที่หนังสือ</span><input class="inp" value="${esc(CTF.no)}" oninput="certF('no',this.value)"></label><label><span class="lbl">วันที่ออก</span><input type="date" class="inp" value="${esc(CTF.date)}" onchange="certF('date',this.value)"></label>
+   <label><span class="lbl" id="csl">${CE&&CE.daily?'ค่าจ้างต่อวัน (บาท)':'เงินเดือน (บาท)'}</span><input type="number" min="0" step="0.01" class="inp" id="csal" value="${esc(CTF.sal)}" oninput="certF('sal',this.value)"></label><label><span class="lbl">มีผลใช้ได้ (วัน)</span><input type="number" min="1" max="365" class="inp" value="${esc(CTF.days)}" oninput="certF('days',this.value)"></label></div>
+   <div class="mt-4"><span class="lbl">รายได้อื่นๆ ต่อเดือน (ถ้ามี)</span><div class="flex flex-wrap gap-1.5 my-2">${chips}</div><div id="coi"></div>
+   <div class="flex justify-between bg-white rounded-2xl px-4 py-2.5 font-semibold mt-1" id="ctot"></div></div>
+   <details class="mt-4"><summary class="text-sm font-semibold text-[var(--p)] cursor-pointer"><i class="fa-solid fa-sliders mr-1"></i>ตั้งค่าหนังสือ (ระบบจำไว้ใช้ครั้งต่อไป)</summary><div class="space-y-3 mt-3">
+    <label class="flex items-center gap-2 text-sm"><input type="checkbox" ${S.word?'checked':''} onchange="certS('word',this.checked)"> แสดงจำนวนเงินเป็นตัวอักษร</label>
+    <label class="flex items-start gap-2 text-sm"><input type="checkbox" class="mt-1" ${S.head?'checked':''} onchange="certS('head',this.checked)"> พิมพ์หัวกระดาษ (โลโก้และชื่อบริษัท) ไม่ต้องติ๊กถ้าพิมพ์บนกระดาษหัวจดหมาย</label>
+    <label class="block"><span class="lbl">ที่อยู่ / เบอร์โทร ใต้ชื่อบริษัท (ใช้เมื่อพิมพ์หัวกระดาษ)</span><input class="inp" value="${esc(S.addr||'')}" oninput="certS('addr',this.value)"></label>
+    <label class="block"><span class="lbl">ชื่อผู้ลงนาม</span><input class="inp" value="${esc(S.signer)}" oninput="certS('signer',this.value)"></label>
+    <label class="block"><span class="lbl">ตำแหน่งผู้ลงนาม</span><input class="inp" value="${esc(S.signerPos)}" oninput="certS('signerPos',this.value)"></label>
+    <label class="block"><span class="lbl">บรรทัดภาษาอังกฤษใต้ตำแหน่ง (เว้นว่างได้)</span><input class="inp" value="${esc(S.signerEn||'')}" oninput="certS('signerEn',this.value)"></label></div></details>
+   <button class="btn btn-c w-full mt-5" onclick="certSave()"><i class="fa-solid fa-print"></i> บันทึกและพิมพ์ A4</button></div>
+  <div class="card p-5"><b class="fh text-[var(--p)] block">ประวัติการออกหนังสือ</b><p class="text-xs text-slate-500 mb-3">บันทึกทุกครั้งที่พิมพ์ กดพิมพ์ซ้ำได้</p><input class="inp mb-3" placeholder="ค้นหาเลขที่ รหัส หรือชื่อ" value="${esc(CHQ)}" oninput="CHQ=this.value;certHist()"><div id="chist" class="overflow-x-auto max-h-96"></div></div>
+ </div>
+ <div class="card p-4 min-w-0 lg:sticky lg:top-4" style="background:#DADFEA"><div class="flex flex-wrap justify-between items-center gap-2 mb-3"><b class="fh text-[var(--p)]"><i class="fa-regular fa-file-lines mr-1"></i>ตัวอย่างก่อนพิมพ์ (A4)</b><span class="text-[11px] text-slate-600"><span class="px-1 rounded" style="background:#FFF3B0">แถบเหลือง</span> = ข้อมูลที่ระบบเติม (พิมพ์จริงไม่มีสี)</span></div><div id="cpvw" class="relative overflow-hidden"><div id="cpv" class="bg-white shadow-lg" style="width:794px;transform-origin:top left"></div></div></div></div>`;
+ certOI();certHist()}
+
+function certEmp(){if(!CE)return '';const e=CE.e;
+ return `<div class="bg-white rounded-2xl p-4 mt-3"><div class="flex items-center gap-3"><span class="w-11 h-11 rounded-xl bg-[var(--pc)] text-[var(--p)] grid place-items-center fh font-semibold shrink-0">${esc((e.firstName||'?').slice(0,1))}</span><div class="min-w-0"><b class="fh text-[var(--p)] block truncate">${N(e)}</b><span class="text-xs text-slate-500">รหัส ${esc(e.empId)} · ${esc(e.employeeType=='Daily'?'รายวัน':e.employeeType=='Part-time'?'Part-time':'รายเดือน')}</span></div></div>
+ <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm mt-3"><div><span class="block text-[11px] text-slate-500">ตำแหน่ง</span>${e.position?esc(e.position):'<span class="text-[#C2353A]">ไม่มีในแฟ้ม</span>'}</div><div><span class="block text-[11px] text-slate-500">แผนก</span>${esc(e.department||'-')}</div><div><span class="block text-[11px] text-slate-500">เริ่มงาน</span>${e.startDate?cTD(e.startDate):'<span class="text-[#C2353A]">ไม่มีในแฟ้ม</span>'}</div><div><span class="block text-[11px] text-slate-500">อายุงาน</span>${cTen(e.startDate)}</div>
+ <div><span class="block text-[11px] text-slate-500">${CE.daily?'ค่าจ้างล่าสุด (ต่อวัน)':'เงินเดือนล่าสุด'}</span>${CE.ls?'<b>'+cB(CE.ls.amt)+' บาท</b>':'<span class="text-[#C2353A]">ไม่มีประวัติเงินเดือน</span>'}</div><div><span class="block text-[11px] text-slate-500">มีผลตั้งแต่</span>${CE.ls&&CE.ls.date?cTD(CE.ls.date):'-'}</div></div>
+ <p class="text-[11px] text-slate-500 mt-2"><i class="fa-solid fa-circle-info mr-1"></i>เงินเดือนดึงจากรายการล่าสุดใน "ประวัติเงินเดือน" ของแฟ้มพนักงาน</p></div>`}
+function certPick(id){const e=E.find(x=>String(x.empId)==String(id));if(!e)return;const ls=cLastSal(e);CE={e,empId:String(e.empId),ls,daily:e.employeeType=='Daily'};CTF.sal=ls?ls.amt:'';certDraw()}
+function certFind(){const q=($('cq').value||'').trim(),box=$('cemp');if(!q)return;const qn=q.toUpperCase(),act=E.filter(e=>!isOut(e));
+ let m=act.filter(e=>String(e.empId).trim().toUpperCase()==qn);if(!m.length)m=act.filter(e=>nm(e).toLowerCase().includes(q.toLowerCase())||String(e.empId).includes(q));
+ if(m.length==1)return certPick(m[0].empId);CE=null;certPv();
+ if(!m.length){const out=E.find(e=>String(e.empId).trim().toUpperCase()==qn&&isOut(e));box.innerHTML=`<div class="rounded-2xl bg-[#FFF4E5] text-[#8A4B00] text-sm px-4 py-3 mt-3"><i class="fa-solid fa-circle-exclamation mr-1"></i>${out?'พนักงานรหัส '+esc(q)+' ลาออกแล้ว':'ไม่พบพนักงานที่ตรงกับ "'+esc(q)+'"'}</div>`;return}
+ box.innerHTML=`<div class="mt-3 text-xs text-slate-500 mb-1">พบ ${m.length} คน เลือก 1 คน</div><div class="space-y-1.5 max-h-64 overflow-y-auto">${m.slice(0,20).map(e=>`<button class="w-full text-left bg-white rounded-xl px-3 py-2 text-sm hover:ring-2 hover:ring-[var(--pc)]" data-i="${esc(e.empId)}" onclick="certPick(this.dataset.i)"><b>${esc(e.empId)}</b> ${N(e)} <span class="text-slate-500 text-xs">· ${esc(e.department||'-')}</span></button>`).join('')}</div>`}
+function certF(k,v){CTF[k]=v;certPv();if(k=='sal')certTot()}
+function certS(k,v){CERT.set[k]=v;certPv()}
+function certAdd(n){COI.push({name:n,amt:''});certOI()}
+function certOI(){const b=$('coi');if(!b)return;b.innerHTML=COI.map((o,i)=>`<div class="gap-2 mb-2" style="display:grid;grid-template-columns:minmax(0,1fr) 110px 40px"><input class="inp !py-2" placeholder="ชื่อรายการ" value="${esc(o.name)}" oninput="COI[${i}].name=this.value;certPv()"><input class="inp !py-2 text-right" type="number" min="0" step="0.01" placeholder="บาท/เดือน" value="${esc(o.amt)}" oninput="COI[${i}].amt=this.value;certPv();certTot()"><button class="rounded-xl bg-[#FFE3E4] text-[#D63D43]" title="ลบรายการ" aria-label="ลบรายการ" onclick="COI.splice(${i},1);certOI()"><i class="fa-solid fa-xmark"></i></button></div>`).join('');certTot();certPv()}
+const certOth=()=>COI.map(o=>({name:String(o.name||'').trim(),amt:Math.round((+o.amt||0)*100)/100})).filter(o=>o.name&&o.amt>0);
+function certTot(){const t=$('ctot');if(!t)return;const o=certOth(),s=+CTF.sal||0;t.innerHTML=CE&&CE.daily?`<span>รายได้อื่นรวมต่อเดือน</span><span>${cB(o.reduce((a,x)=>a+x.amt,0))} บาท</span>`:`<span>รวมรายได้ต่อเดือน</span><span>${cB(s+o.reduce((a,x)=>a+x.amt,0))} บาท</span>`}
+function certRec(){const e=CE?CE.e:null,o=certOth(),s=+CTF.sal||0;return{no:CTF.no,date:CTF.date,empId:e?e.empId:'',name:e?nm(e).trim():'',position:e?e.position||'':'',dept:e?e.department||'':'',startDate:e?e.startDate||'':'',salary:s,others:o,total:CE&&CE.daily?0:s+o.reduce((a,x)=>a+x.amt,0),days:+CTF.days||30,signer:CERT.set.signer,signerPos:CERT.set.signerPos,daily:!!(CE&&CE.daily)}}
+
+function certLetter(r,S,hl){const h=v=>hl?`<span style="background:#FFF3B0">${v}</span>`:v,dots='....................',f=v=>v?h(esc(v)):dots,word=S.word!==false,amt=n=>h(cB(n))+' บาท'+(word?' ('+h(bahtText(n))+')':'');
+ const o=r.others||[],head=S.head?`<div style="display:flex;align-items:center;gap:12px;border-bottom:1.5px solid #2A3C76;padding-bottom:8px;margin-bottom:12px"><img src="https:\/\/i.postimg.cc\/pXHW7T4D\/Squre-profile-pink-bg.jpg" alt="" style="width:50px;height:50px;border-radius:10px;object-fit:cover"><div><div style="font-weight:700;font-size:15pt">บริษัท โรงพยาบาลรักษ์สกล ดิเวลลอปเม้นท์ จำกัด</div>${S.addr?`<div style="font-size:11pt">${esc(S.addr)}</div>`:''}</div></div>`:'';
+ const ind='text-indent:2.5cm;margin:0';
+ return `<div style="font-family:Sarabun,sans-serif;font-size:15pt;line-height:1.6;color:#000;padding:8mm 10mm 0 14mm">${head}
+ <p style="margin:0">ที่ ${f(r.no)}</p><p style="text-align:center;font-weight:700;text-decoration:underline;margin:22px 0 18px">หนังสือรับรองเงินเดือน</p>
+ <p style="${ind}">หนังสือฉบับนี้ให้ไว้เพื่อรับรองว่า ${f(r.name)} ได้ปฏิบัติงานในตำแหน่ง ${f(r.position)} แผนก${/^[A-Za-z0-9]/.test(r.dept||'')?' ':''}${f(r.dept)} บริษัท โรงพยาบาลรักษ์สกล ดิเวลลอปเม้นท์ จำกัด</p>
+ <p style="${ind}">โดยได้เริ่มเข้าปฏิบัติงานตั้งแต่วันที่ ${r.startDate?h(cTD(r.startDate)):dots} จนถึงปัจจุบัน และได้รับ${r.daily?'อัตราค่าจ้างวันละ':'อัตราเงินเดือนละ'} ${r.salary?amt(r.salary):dots+' บาท'}</p>
+ ${o.length?`<p style="${ind}">นอกจากนี้ยังได้รับรายได้อื่นเป็นประจำทุกเดือน ดังนี้</p>${o.map((x,i)=>`<div style="display:flex;justify-content:space-between;gap:12px;margin:0 0 0 2.5cm"><span>${i+1}. ${h(esc(x.name))}</span><span style="white-space:nowrap">เดือนละ ${h(cB(x.amt))} บาท</span></div>`).join('')}${r.daily?'':`<p style="${ind}">รวมรายได้ทั้งสิ้นเดือนละ ${amt(r.total)}</p>`}`:''}
+ <p style="${ind}">หนังสือรับรองฉบับนี้ออกให้ไว้และให้มีผลใช้ได้เป็นระยะเวลา ${h(r.days||30)} วันนับจากวันที่ออกหนังสือฉบับนี้</p>
+ <p style="${ind};margin-top:20px">หนังสือฉบับนี้ออกให้ ณ วันที่ ${r.date?h(cTD(r.date)):dots}</p>
+ <div style="margin:64px 0 0 32%;text-align:center"><p style="margin:0 0 6px">ลงชื่อ ...........................................</p><p style="margin:0">(${h(esc(r.signer||''))})</p><p style="margin:0">${h(esc(r.signerPos||''))}</p>${S.signerEn?`<p style="margin:0;font-size:12pt">${esc(S.signerEn)}</p>`:''}</div></div>`}
+function certPv(){const p=$('cpv'),w=$('cpvw');if(!p||!w||!CERT)return;p.innerHTML=`<div style="min-height:1123px;padding:45px 45px 45px 45px">${certLetter(certRec(),CERT.set,1)}</div>`;certFit()}
+function certFit(){const p=$('cpv'),w=$('cpvw');if(!p||!w)return;const s=Math.min(1,w.clientWidth/794);p.style.transform='scale('+s+')';w.style.height=Math.ceil(p.offsetHeight*s)+'px'}
+window.addEventListener('resize',()=>{if($('cpv')&&!$('rcert').classList.contains('hidden'))certFit()});
+function certPrint(r,S){printHtml(certLetter(r,S,0),'A4 portrait')}
+async function certSave(){const r=certRec();
+ if(!CE)return modal('ยังไม่ได้เลือกพนักงาน','ค้นหาและเลือกพนักงานก่อน','error');
+ if(!String(r.no).trim())return modal('ยังไม่มีเลขที่หนังสือ','กรุณาใส่เลขที่หนังสือ','error');
+ if(!(r.salary>0))return modal('ยังไม่มีเงินเดือน','กรุณาใส่เงินเดือน หรือเพิ่มประวัติเงินเดือนในแฟ้มพนักงาน','error');
+ if(COI.some(o=>(String(o.name||'').trim()&&!(+o.amt>0))||(!String(o.name||'').trim()&&+o.amt>0)))return modal('รายได้อื่นไม่ครบ','กรอกทั้งชื่อรายการและจำนวนเงิน หรือลบแถวที่ไม่ใช้','error');
+ busy('กำลังบันทึกหนังสือรับรอง...');
+ try{const x=await srv('apiCertSave',{token:TOKEN,cert:{no:r.no,date:r.date,empId:r.empId,salary:r.salary,days:r.days,others:r.others},set:CERT.set});if(!x||x.status!='success')throw Error(x&&x.message||'บันทึกไม่สำเร็จ');
+  CERT.list.unshift(x.cert);CERT.next=x.next;CERT.set=x.set;hideM();certPrint(x.cert,CERT.set);CTF.no=x.next;CE=null;COI=[];CTF.sal='';certDraw();toast('<i class="fa-solid fa-check mr-1"></i>บันทึกหนังสือเลขที่ '+esc(x.cert.no)+' แล้ว','ok')}
+ catch(e){modal('บันทึกไม่สำเร็จ',esc(e.message),'error')}}
+function certHist(){const b=$('chist');if(!b)return;const q=CHQ.trim().toLowerCase(),L=CERT.list.map((c,i)=>[c,i]).filter(([c])=>!q||(c.no+' '+c.empId+' '+c.name).toLowerCase().includes(q));
+ b.innerHTML=L.length?`<table class="w-full"><thead><tr><th>เลขที่</th><th>วันที่</th><th>พนักงาน</th><th class="text-right">รวม/เดือน</th><th></th></tr></thead><tbody>${L.slice(0,100).map(([c,i])=>`<tr><td class="whitespace-nowrap">${esc(c.no)}</td><td class="whitespace-nowrap text-xs">${D(c.date)}</td><td class="text-sm">${esc(c.empId)} ${esc(c.name)}</td><td class="text-right">${c.daily?'<span class="text-xs text-slate-500">รายวัน</span>':cB(c.total)}</td><td><button class="lk whitespace-nowrap" onclick="certRe(${i})"><i class="fa-solid fa-print mr-1"></i>พิมพ์ซ้ำ</button></td></tr>`).join('')}</tbody></table>`:`<p class="text-sm text-slate-500 py-4 text-center">${CERT.list.length?'ไม่พบตามคำค้น':'ยังไม่เคยออกหนังสือ'}</p>`}
+function certRe(i){const c=CERT.list[i];if(c)certPrint(c,CERT.set)}
 
 
 let PAY=null,PT='ana',PDIRTY=0,PAG='pos',PSF='';
